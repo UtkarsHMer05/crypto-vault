@@ -924,3 +924,6750 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 *"In cryptography we trust"*
 
 </div>
+
+
+---
+
+
+# Quick Start Guide
+
+
+# 🚀 CryptoVault Enterprise - Quick Start Guide
+
+> Get up and running in 5 minutes
+
+---
+
+## Prerequisites
+
+- **Node.js** 18.17 or later
+- **PostgreSQL** database (local or cloud)
+- **npm** or **yarn**
+
+---
+
+## Option 1: Demo Mode (No Setup Required)
+
+Try the app immediately without any configuration:
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd cryptovault-enterprise
+
+# Install dependencies
+npm install
+
+# Run in development mode
+npm run dev
+```
+
+Open [http://localhost:3000/demo](http://localhost:3000/demo) to explore the demo.
+
+**Demo mode features:**
+- ✅ Full encryption/decryption workflow
+- ✅ Local storage (no AWS/database needed)
+- ✅ Pre-generated demo keys
+- ⚠️ Not for production use
+
+---
+
+## Option 2: Full Setup (Production-Ready)
+
+### Step 1: Install Dependencies
+
+```bash
+npm install
+```
+
+### Step 2: Set Up Environment Variables
+
+```bash
+# Copy example file
+cp .env.example .env.local
+
+# Edit with your values
+nano .env.local
+```
+
+**Required variables:**
+
+```env
+# Database (PostgreSQL)
+DATABASE_URL="postgresql://user:password@localhost:5432/cryptovault"
+
+# JWT Secret (generate with: openssl rand -base64 32)
+JWT_SECRET="your-256-bit-secret-key-here"
+```
+
+**Optional variables (for cloud storage):**
+
+```env
+# AWS Configuration
+AWS_REGION="ap-south-1"
+AWS_ACCESS_KEY_ID="your-access-key"
+AWS_SECRET_ACCESS_KEY="your-secret-key"
+AWS_S3_BUCKET="your-bucket-name"
+AWS_KMS_KEY_ARN="arn:aws:kms:region:account:key/id"
+
+# Feature Flags
+ENABLE_POST_QUANTUM="true"
+ENABLE_FHE="false"
+```
+
+### Step 3: Set Up Database
+
+```bash
+# Generate Prisma client
+npm run db:generate
+
+# Push schema to database
+npm run db:push
+
+# (Optional) Open Prisma Studio
+npm run db:studio
+```
+
+### Step 4: Run the Application
+
+```bash
+# Development mode (with hot reload)
+npm run dev
+
+# OR Production mode
+npm run build
+npm start
+```
+
+Open [http://localhost:3000](http://localhost:3000)
+
+---
+
+## First Steps After Setup
+
+### 1. Create an Account
+
+1. Go to `/register`
+2. Enter email and password
+3. System generates RSA-4096 key pair
+4. Private key is encrypted with your password
+
+### 2. Upload a File
+
+1. Go to `/upload` or Dashboard
+2. Drag & drop or select a file
+3. Watch encryption happen in real-time
+4. File is encrypted client-side before upload
+
+### 3. Download and Decrypt
+
+1. Go to `/files`
+2. Click on a file to download
+3. File is downloaded encrypted
+4. Decrypted in your browser with your private key
+
+### 4. Explore Advanced Features
+
+| Feature | Location |
+|---------|----------|
+| Encryption Demos | `/crypto-lab` |
+| Visual Demonstrations | `/visual-demo` |
+| Analytics Dashboard | `/analytics` |
+| Key Management | `/keys` |
+| File Sharing | `/share` |
+
+---
+
+## Common Commands
+
+```bash
+# Development
+npm run dev              # Start dev server
+npm run build            # Build for production
+npm start                # Start production server
+
+# Database
+npm run db:generate      # Generate Prisma client
+npm run db:push          # Push schema to database
+npm run db:studio        # Open Prisma Studio
+npm run db:migrate       # Run migrations
+
+# Code Quality
+npm run lint             # Run ESLint
+npm run type-check       # TypeScript check
+```
+
+---
+
+## Folder Structure Quick Reference
+
+```
+cryptovault-enterprise/
+├── app/                  # Next.js pages & API routes
+│   ├── (auth)/          # Login, Register
+│   ├── (dashboard)/     # Protected pages
+│   ├── api/             # API endpoints
+│   └── demo/            # Demo mode
+├── components/          # React components
+├── lib/
+│   ├── crypto/          # 🔐 Cryptographic modules
+│   ├── auth/            # JWT handling
+│   └── storage/         # Storage adapters
+├── prisma/              # Database schema
+└── public/              # Static assets
+```
+
+---
+
+## Troubleshooting
+
+### "Cannot connect to database"
+
+1. Ensure PostgreSQL is running
+2. Check `DATABASE_URL` in `.env.local`
+3. Try: `npm run db:push`
+
+### "Module not found" errors
+
+```bash
+npm install
+npm run db:generate
+```
+
+### "Crypto operation failed"
+
+- Ensure you're running on `localhost` (HTTPS required for prod)
+- Clear browser cache and try again
+- Check browser console for specific error
+
+### AWS/S3 errors
+
+- Verify AWS credentials in `.env.local`
+- Check IAM permissions (S3, KMS access)
+- Ensure bucket exists and region matches
+
+---
+
+## Next Steps
+
+1. 📖 Read [README.md](./README.md) for full documentation
+2. 🔐 Explore [TECHNICAL_DOCS.md](./TECHNICAL_DOCS.md) for crypto details
+3. 🏗️ Review [ARCHITECTURE.md](./ARCHITECTURE.md) for system design
+4. 📊 Use [PRESENTATION_CONTENT.md](./PRESENTATION_CONTENT.md) for slides
+
+---
+
+## Need Help?
+
+- Check [FAQ.md](./FAQ.md) for common questions
+- Review [GLOSSARY.md](./GLOSSARY.md) for crypto terms
+- See [SECURITY.md](./SECURITY.md) for security details
+
+---
+
+*Happy encrypting! 🔐*
+
+
+---
+
+
+# Comprehensive Features List
+
+
+# ✨ CryptoVault Enterprise - Complete Feature List
+
+> Comprehensive list of all features, algorithms, and capabilities
+
+---
+
+## 🔐 Core Security Features
+
+### Client-Side Encryption
+| Feature | Description | Status |
+|---------|-------------|--------|
+| AES-256-GCM Encryption | All files encrypted in browser before upload | ✅ Implemented |
+| Random IV Generation | 96-bit random IV for each encryption | ✅ Implemented |
+| Authenticated Encryption | GCM mode provides integrity + confidentiality | ✅ Implemented |
+| Key Generation | Secure random DEK generation | ✅ Implemented |
+
+### Key Management
+| Feature | Description | Status |
+|---------|-------------|--------|
+| RSA-4096 Key Pairs | User asymmetric keys for DEK wrapping | ✅ Implemented |
+| Envelope Encryption | DEK wrapped with public key | ✅ Implemented |
+| Password-Protected Keys | Private keys encrypted with user password | ✅ Implemented |
+| AWS KMS Integration | Additional cloud key wrapping | ✅ Implemented |
+| GCP Cloud KMS | Backup key management | 🔧 Optional |
+
+### Zero-Knowledge Architecture
+| Feature | Description | Status |
+|---------|-------------|--------|
+| Server Never Sees Plaintext | All encryption client-side | ✅ Implemented |
+| Server Never Holds Keys | Only wrapped DEKs stored | ✅ Implemented |
+| No Key Recovery by Provider | Only user can decrypt | ✅ Implemented |
+
+---
+
+## 🛡️ Advanced Cryptography
+
+### Symmetric Encryption
+| Algorithm | Key Size | Mode | Purpose | Status |
+|-----------|----------|------|---------|--------|
+| AES-256 | 256-bit | GCM | Primary file encryption | ✅ Implemented |
+| ChaCha20-Poly1305 | 256-bit | AEAD | Alternative cipher | 🔧 In symmetric-ciphers.ts |
+
+### Asymmetric Encryption
+| Algorithm | Key Size | Purpose | Status |
+|-----------|----------|---------|--------|
+| RSA-OAEP | 4096-bit | Key wrapping | ✅ Implemented |
+| ElGamal | Variable | Alternative encryption | 🔧 In elgamal.ts |
+
+### Key Exchange
+| Algorithm | Type | Purpose | Status |
+|-----------|------|---------|--------|
+| Diffie-Hellman | Classical | Key agreement | ✅ Implemented |
+| ECDH P-384 | Elliptic Curve | Efficient key agreement | ✅ Implemented |
+
+### Digital Signatures
+| Algorithm | Curve/Size | Purpose | Status |
+|-----------|------------|---------|--------|
+| ECDSA | P-384 | Audit log signing | ✅ Implemented |
+| EdDSA | Ed25519 | Fast signatures | ✅ Implemented |
+
+### Hash Functions
+| Algorithm | Output | Purpose | Status |
+|-----------|--------|---------|--------|
+| SHA-256 | 256-bit | File hashing, integrity | ✅ Implemented |
+| SHA-512 | 512-bit | HMAC, high security | ✅ Implemented |
+| SHA-3 | Variable | Alternative hash | 🔧 Available |
+| Merkle Trees | Variable | Chunk integrity | ✅ Implemented |
+
+### Message Authentication
+| Algorithm | Purpose | Status |
+|-----------|---------|--------|
+| HMAC-SHA512 | Ciphertext integrity | ✅ Implemented |
+| GCM Auth Tag | Authenticated encryption | ✅ Implemented |
+
+---
+
+## 🚀 Post-Quantum Cryptography
+
+| Feature | Algorithm | Purpose | Status |
+|---------|-----------|---------|--------|
+| Key Encapsulation | CRYSTALS-Kyber-768 | Quantum-safe key exchange | ✅ Simulated |
+| Hybrid Encryption | Classical + PQC | Future-proof security | ✅ Simulated |
+| QKD Simulation | BB84 Protocol | Quantum key distribution demo | ✅ Implemented |
+| Eavesdropper Detection | Error rate analysis | Detect quantum attacks | ✅ Implemented |
+
+---
+
+## 🎓 Zero-Knowledge Proofs
+
+| Feature | Protocol | Purpose | Status |
+|---------|----------|---------|--------|
+| ZKP Authentication | Schnorr Protocol | Prove identity without password | ✅ Implemented |
+| Commitment Scheme | Hash-based | First protocol step | ✅ Implemented |
+| Challenge-Response | Random challenge | Interactive proof | ✅ Implemented |
+| Proof Verification | Equation check | Verify knowledge | ✅ Implemented |
+
+---
+
+## 🔀 Multi-Party Computation
+
+| Feature | Algorithm | Purpose | Status |
+|---------|-----------|---------|--------|
+| Secret Sharing | Shamir's (t,n) | Split secret into shares | ✅ Implemented |
+| Threshold Recovery | Lagrange Interpolation | Reconstruct from k shares | ✅ Implemented |
+| Distributed Key Storage | Multi-provider | AWS + GCP + User | ✅ Implemented |
+| Share Verification | Feldman VSS | Verify share validity | 🔧 Planned |
+
+---
+
+## 🎯 Attribute-Based Encryption
+
+| Feature | Type | Purpose | Status |
+|---------|------|---------|--------|
+| CP-ABE Encryption | Ciphertext-Policy | Policy-based access | ✅ Simulated |
+| Policy Expressions | Boolean formulas | Define access rules | ✅ Implemented |
+| Attribute Keys | Per-user attributes | Role-based access | ✅ Implemented |
+| Policy Validation | Syntax checking | Ensure valid policies | ✅ Implemented |
+
+**Example Policies:**
+- `"(role:faculty AND dept:CSE)"`
+- `"(clearance:5) OR (role:admin)"`
+- `"(team:security AND level:senior)"`
+
+---
+
+## 🔍 Homomorphic Encryption (FHE)
+
+| Feature | Scheme | Purpose | Status |
+|---------|--------|---------|--------|
+| Integer Encryption | BFV | Encrypt integers | ✅ Simulated |
+| Float Encryption | CKKS | Encrypt real numbers | ✅ Simulated |
+| Homomorphic Addition | Both | Add encrypted values | ✅ Simulated |
+| Homomorphic Multiplication | Both | Multiply encrypted values | ✅ Simulated |
+| Searchable Encryption | Encrypted index | Search on encrypted data | ✅ Simulated |
+
+---
+
+## 🌲 Oblivious RAM (ORAM)
+
+| Feature | Algorithm | Purpose | Status |
+|---------|-----------|---------|--------|
+| Path ORAM | Tree-based | Hide access patterns | ✅ Implemented |
+| Position Map | Randomized | Map blocks to leaves | ✅ Implemented |
+| Stash Management | Client-side | Overflow handling | ✅ Implemented |
+| Access Complexity | O(log N) | Efficient reads/writes | ✅ Implemented |
+
+---
+
+## 🔄 Proxy Re-Encryption
+
+| Feature | Scheme | Purpose | Status |
+|---------|--------|---------|--------|
+| Re-encryption Key Gen | AFGH | Create delegation key | ✅ Implemented |
+| Ciphertext Transformation | Proxy | Transform for recipient | ✅ Implemented |
+| Unidirectional | Alice→Bob only | No reverse delegation | ✅ Implemented |
+| Collusion Resistant | Proxy + Bob | Cannot recover Alice's key | ✅ Implemented |
+
+---
+
+## 🏛️ PKI & Authentication
+
+### X.509 Certificates
+| Feature | Purpose | Status |
+|---------|---------|--------|
+| Root CA Generation | Self-signed CA | ✅ Implemented |
+| End-Entity Certificates | User/server certs | ✅ Implemented |
+| Certificate Chain | Hierarchical trust | ✅ Implemented |
+| Signature Verification | ECDSA P-384 | ✅ Implemented |
+| CRL Creation | Revocation lists | ✅ Implemented |
+
+### Kerberos Authentication
+| Feature | Component | Status |
+|---------|-----------|--------|
+| Key Distribution Center | KDC simulation | ✅ Implemented |
+| Ticket Granting Ticket | TGT issuance | ✅ Implemented |
+| Service Tickets | ST for services | ✅ Implemented |
+| Authenticators | Time-limited tokens | ✅ Implemented |
+| Ticket Verification | Service-side | ✅ Implemented |
+
+---
+
+## ☁️ Cloud Integration
+
+### AWS Services
+| Service | Purpose | Status |
+|---------|---------|--------|
+| S3 | Primary file storage | ✅ Implemented |
+| KMS | Key wrapping | ✅ Implemented |
+| IAM | Access control | ✅ Configured |
+
+### GCP Services
+| Service | Purpose | Status |
+|---------|---------|--------|
+| Cloud Storage | Backup storage | 🔧 Optional |
+| Cloud KMS | Backup key management | 🔧 Optional |
+
+### Multi-Cloud
+| Feature | Purpose | Status |
+|---------|---------|--------|
+| Provider Redundancy | High availability | ✅ Designed |
+| Cross-Cloud Sync | Disaster recovery | 🔧 Planned |
+| Provider Abstraction | Swap providers easily | ✅ Implemented |
+
+---
+
+## 📊 Analytics & Monitoring
+
+### Encryption Metrics
+| Metric | Description | Status |
+|--------|-------------|--------|
+| Operation Duration | Time per crypto op | ✅ Tracked |
+| Throughput | MB/s for files | ✅ Tracked |
+| Algorithm Usage | Which algos used | ✅ Tracked |
+| Error Rate | Failed operations | ✅ Tracked |
+
+### Security Events
+| Event Type | Severity | Status |
+|------------|----------|--------|
+| Failed Login | Medium | ✅ Logged |
+| Suspicious Download | High | ✅ Logged |
+| Integrity Failure | Critical | ✅ Logged |
+| Anomaly Detection | Variable | ✅ Logged |
+
+---
+
+## 🔗 Audit Trail
+
+### Blockchain-Style Logging
+| Feature | Purpose | Status |
+|---------|---------|--------|
+| ECDSA Signatures | Authenticate entries | ✅ Implemented |
+| Hash Chaining | Link entries together | ✅ Implemented |
+| Merkle Proofs | Batch verification | ✅ Implemented |
+| Immutable History | Tamper detection | ✅ Implemented |
+
+### Logged Actions
+| Action | Description | Status |
+|--------|-------------|--------|
+| FILE_UPLOADED | New file added | ✅ Logged |
+| FILE_DOWNLOADED | File retrieved | ✅ Logged |
+| FILE_SHARED | Share created | ✅ Logged |
+| FILE_DELETED | File removed | ✅ Logged |
+| LOGIN | User authenticated | ✅ Logged |
+| LOGOUT | Session ended | ✅ Logged |
+| KEY_GENERATED | New keys created | ✅ Logged |
+
+---
+
+## 🖥️ User Interface
+
+### Pages
+| Page | Purpose | Status |
+|------|---------|--------|
+| Home / Landing | Product showcase | ✅ Implemented |
+| Login | User authentication | ✅ Implemented |
+| Register | Account creation | ✅ Implemented |
+| Dashboard | File overview | ✅ Implemented |
+| Files | File management | ✅ Implemented |
+| Upload | File upload | ✅ Implemented |
+| Keys | Key management | ✅ Implemented |
+| Share | File sharing | ✅ Implemented |
+| Analytics | Metrics view | ✅ Implemented |
+| Security | Security settings | ✅ Implemented |
+| Crypto Lab | Algorithm demos | ✅ Implemented |
+| Visual Demo | Interactive demos | ✅ Implemented |
+| Demo Mode | No-auth demo | ✅ Implemented |
+
+### UI Components
+| Component | Library | Status |
+|-----------|---------|--------|
+| Buttons | Shadcn/UI | ✅ Implemented |
+| Dialogs | Radix UI | ✅ Implemented |
+| Dropdowns | Radix UI | ✅ Implemented |
+| Progress | Radix UI | ✅ Implemented |
+| Tabs | Radix UI | ✅ Implemented |
+| Toasts | Radix UI | ✅ Implemented |
+| Accordion | Radix UI | ✅ Implemented |
+| File Dropzone | react-dropzone | ✅ Implemented |
+
+---
+
+## 🛠️ Developer Features
+
+### API Endpoints
+| Endpoint | Method | Purpose |
+|----------|--------|---------|
+| /api/auth/register | POST | Create account |
+| /api/auth/login | POST | Authenticate |
+| /api/auth/logout | POST | End session |
+| /api/auth/me | GET | Current user |
+| /api/files/upload | POST | Upload encrypted file |
+| /api/files/download | GET | Download file |
+| /api/files/list | GET | List files |
+| /api/files/delete | DELETE | Soft delete |
+| /api/share/create | POST | Create share |
+| /api/share/revoke | POST | Revoke access |
+| /api/audit | GET | Audit logs |
+| /api/metrics | GET | Performance metrics |
+
+### Database
+| Feature | Technology | Status |
+|---------|------------|--------|
+| ORM | Prisma | ✅ Implemented |
+| Database | PostgreSQL | ✅ Implemented |
+| Migrations | Prisma Migrate | ✅ Available |
+| Studio | Prisma Studio | ✅ Available |
+
+### Development Tools
+| Tool | Purpose | Status |
+|------|---------|--------|
+| TypeScript | Type safety | ✅ Configured |
+| ESLint | Code linting | ✅ Configured |
+| Tailwind | Styling | ✅ Configured |
+| Hot Reload | Dev experience | ✅ Working |
+
+---
+
+## 📈 Performance Characteristics
+
+### Encryption Performance (Approximate)
+| Operation | Throughput | Notes |
+|-----------|------------|-------|
+| AES-256-GCM | ~500 MB/s | Browser-dependent |
+| RSA-4096 Encrypt | ~5 ops/s | Key wrapping |
+| RSA-4096 Decrypt | ~50 ops/s | Key unwrapping |
+| SHA-256 | ~1 GB/s | Hashing |
+| ECDSA Sign | ~100 ops/s | Signing |
+| ECDSA Verify | ~200 ops/s | Verification |
+
+### Storage Overhead
+| Component | Size | Notes |
+|-----------|------|-------|
+| GCM Auth Tag | 16 bytes | Per file |
+| IV | 12 bytes | Per file |
+| Wrapped DEK | 512 bytes | RSA-4096 |
+| HMAC | 64 bytes | SHA-512 |
+| **Total** | ~600 bytes | Fixed overhead |
+
+---
+
+## 🔒 Security Compliance
+
+### Algorithm Standards
+| Standard | Covered By | Status |
+|----------|------------|--------|
+| FIPS 197 | AES-256 | ✅ Compliant |
+| SP 800-38D | GCM Mode | ✅ Compliant |
+| FIPS 186-5 | ECDSA | ✅ Compliant |
+| SP 800-56A | ECDH | ✅ Compliant |
+| SP 800-132 | PBKDF2 | ✅ Compliant |
+| SP 800-208 | Post-Quantum | ✅ Ready |
+
+### Security Best Practices
+| Practice | Implementation | Status |
+|----------|----------------|--------|
+| No Plaintext Storage | Client encryption | ✅ |
+| Secure Key Storage | Encrypted at rest | ✅ |
+| Auth Tag Verification | GCM mode | ✅ |
+| Integrity Checking | HMAC-SHA512 | ✅ |
+| Audit Logging | ECDSA signed | ✅ |
+| Forward Secrecy | Per-file DEK | ✅ |
+
+---
+
+## 📋 Feature Legend
+
+| Symbol | Meaning |
+|--------|---------|
+| ✅ | Fully implemented and working |
+| 🔧 | Partially implemented or optional |
+| 📋 | Planned for future |
+| ❌ | Not available |
+
+---
+
+*Total Features: 150+*
+*Total Crypto Algorithms: 20+*
+*Last Updated: January 2026*
+
+
+---
+
+
+# System Architecture
+
+
+# 🏗️ CryptoVault Enterprise - Architecture Documentation
+
+> Detailed system architecture, component interactions, and design decisions
+
+---
+
+## Table of Contents
+
+1. [High-Level Architecture](#1-high-level-architecture)
+2. [Component Architecture](#2-component-architecture)
+3. [Data Flow Architecture](#3-data-flow-architecture)
+4. [Cryptographic Architecture](#4-cryptographic-architecture)
+5. [Storage Architecture](#5-storage-architecture)
+6. [Database Architecture](#6-database-architecture)
+7. [API Architecture](#7-api-architecture)
+8. [Security Architecture](#8-security-architecture)
+9. [Scalability Considerations](#9-scalability-considerations)
+10. [Design Decisions](#10-design-decisions)
+
+---
+
+## 1. High-Level Architecture
+
+### System Overview
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           CRYPTOVAULT ENTERPRISE                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │                         CLIENT LAYER                                   │  │
+│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  │  │
+│  │  │   React     │  │   Crypto    │  │   State     │  │   Storage   │  │  │
+│  │  │   UI        │  │   Engine    │  │   (Zustand) │  │   Client    │  │  │
+│  │  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                       │                                      │
+│                                       │ HTTPS/TLS 1.3                        │
+│                                       ▼                                      │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │                         SERVER LAYER                                   │  │
+│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  │  │
+│  │  │   Next.js   │  │   Auth      │  │   API       │  │   Prisma    │  │  │
+│  │  │   Runtime   │  │   (JWT)     │  │   Routes    │  │   ORM       │  │  │
+│  │  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                       │                                      │
+│                    ┌──────────────────┼──────────────────┐                  │
+│                    │                  │                  │                  │
+│                    ▼                  ▼                  ▼                  │
+│  ┌─────────────────────┐  ┌─────────────────┐  ┌─────────────────────┐     │
+│  │    AWS S3           │  │   PostgreSQL    │  │    AWS KMS          │     │
+│  │    (Ciphertext)     │  │   (Metadata)    │  │    (Key Wrap)       │     │
+│  └─────────────────────┘  └─────────────────┘  └─────────────────────┘     │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Layer Responsibilities
+
+| Layer | Responsibility |
+|-------|----------------|
+| **Client** | Encryption/decryption, UI, local key management |
+| **Server** | Authentication, routing, metadata storage, cloud orchestration |
+| **Storage** | Encrypted file storage, key wrapping, database persistence |
+
+---
+
+## 2. Component Architecture
+
+### Client-Side Components
+
+```
+src/
+├── app/                          # Next.js App Router
+│   ├── (auth)/                   # Authentication pages
+│   ├── (dashboard)/              # Protected pages
+│   └── api/                      # API routes
+│
+├── components/                   # React components
+│   ├── ui/                       # Shadcn/UI base components
+│   ├── dashboard/                # Dashboard-specific
+│   ├── files/                    # File management
+│   └── layout/                   # Layout components
+│
+├── lib/                          # Core libraries
+│   ├── crypto/                   # Cryptographic modules
+│   │   ├── aes.ts               # Symmetric encryption
+│   │   ├── rsa.ts               # Asymmetric encryption
+│   │   ├── envelope-encryption.ts
+│   │   ├── post-quantum/        # PQC modules
+│   │   ├── zkp/                 # Zero-knowledge proofs
+│   │   ├── mpc/                 # Multi-party computation
+│   │   └── ...                  # 20+ modules
+│   ├── auth/                    # JWT handling
+│   ├── storage/                 # Storage adapters
+│   └── utils/                   # Utilities
+│
+└── prisma/                      # Database schema
+    └── schema.prisma
+```
+
+### Crypto Module Organization
+
+```
+lib/crypto/
+│
+├── Core Encryption
+│   ├── aes.ts              # AES-256-GCM
+│   ├── rsa.ts              # RSA-4096-OAEP
+│   └── envelope-encryption.ts
+│
+├── Key Exchange
+│   ├── diffie-hellman.ts   # Classic DH
+│   └── ecdh.ts             # Elliptic Curve DH
+│
+├── Signatures
+│   ├── ecdsa.ts            # ECDSA P-384
+│   └── eddsa.ts            # Ed25519
+│
+├── Hashing
+│   ├── sha.ts              # SHA-256/512
+│   ├── hmac.ts             # HMAC-SHA512
+│   └── hashing.ts          # Merkle trees
+│
+├── Advanced Crypto
+│   ├── post-quantum/       # Kyber, QKD
+│   ├── zkp/                # Schnorr
+│   ├── mpc/                # Shamir
+│   ├── abe/                # CP-ABE
+│   ├── fhe/                # SEAL wrapper
+│   ├── oram/               # Path ORAM
+│   └── proxy-re-encryption/
+│
+├── Authentication
+│   ├── x509.ts             # PKI
+│   └── kerberos.ts         # Ticket system
+│
+└── Support
+    ├── number-theory.ts    # Math primitives
+    ├── elgamal.ts          # ElGamal
+    ├── pgp.ts              # PGP messages
+    └── tls.ts              # TLS simulation
+```
+
+---
+
+## 3. Data Flow Architecture
+
+### File Upload Flow
+
+```
+┌──────────┐
+│  User    │
+│  selects │
+│  file    │
+└────┬─────┘
+     │
+     ▼
+┌─────────────────────────────────┐
+│  1. READ FILE                   │
+│  - FileReader API               │
+│  - Convert to ArrayBuffer       │
+└────────────┬────────────────────┘
+             │
+             ▼
+┌─────────────────────────────────┐
+│  2. GENERATE CRYPTOGRAPHIC      │
+│     MATERIALS                   │
+│  - DEK: crypto.getRandomValues  │
+│  - IV: crypto.getRandomValues   │
+└────────────┬────────────────────┘
+             │
+             ▼
+┌─────────────────────────────────┐
+│  3. ENCRYPT FILE                │
+│  - Algorithm: AES-256-GCM       │
+│  - Input: plaintext + DEK + IV  │
+│  - Output: ciphertext + authTag │
+└────────────┬────────────────────┘
+             │
+             ▼
+┌─────────────────────────────────┐
+│  4. WRAP DEK                    │
+│  - Algorithm: RSA-4096-OAEP     │
+│  - Input: DEK + user public key │
+│  - Output: wrapped DEK          │
+└────────────┬────────────────────┘
+             │
+             ▼
+┌─────────────────────────────────┐
+│  5. GENERATE HMAC               │
+│  - Algorithm: HMAC-SHA512       │
+│  - Input: ciphertext            │
+│  - Output: integrity signature  │
+└────────────┬────────────────────┘
+             │
+             ▼
+┌─────────────────────────────────┐
+│  6. API REQUEST                 │
+│  POST /api/files/upload         │
+│  - Body: FormData               │
+│    - encryptedData (base64)     │
+│    - metadata (JSON)            │
+│    - crypto (JSON)              │
+└────────────┬────────────────────┘
+             │
+             ▼
+┌─────────────────────────────────┐
+│  7. SERVER PROCESSING           │
+│  - Verify JWT                   │
+│  - Parse request                │
+│  - Optional: KMS wrap DEK       │
+│  - Upload to S3                 │
+│  - Save metadata to PostgreSQL  │
+│  - Create audit log             │
+└────────────┬────────────────────┘
+             │
+             ▼
+┌─────────────────────────────────┐
+│  8. RESPONSE                    │
+│  - File ID                      │
+│  - Storage confirmation         │
+│  - Encryption metrics           │
+└─────────────────────────────────┘
+```
+
+### File Download Flow
+
+```
+┌──────────────────────────────────┐
+│  1. USER REQUEST                 │
+│  GET /api/files/download?id=xxx  │
+└────────────┬─────────────────────┘
+             │
+             ▼
+┌──────────────────────────────────┐
+│  2. SERVER AUTHORIZATION         │
+│  - Verify JWT                    │
+│  - Check file ownership          │
+│  - Check share permissions       │
+└────────────┬─────────────────────┘
+             │
+             ▼
+┌──────────────────────────────────┐
+│  3. FETCH FROM STORAGE           │
+│  - Download from S3              │
+│  - Load metadata from PostgreSQL │
+│  - Optional: KMS unwrap DEK      │
+└────────────┬─────────────────────┘
+             │
+             ▼
+┌──────────────────────────────────┐
+│  4. RESPONSE TO CLIENT           │
+│  JSON:                           │
+│  - encryptedData (base64)        │
+│  - crypto: { DEK, iv, authTag }  │
+│  - metadata: { name, type, size }│
+└────────────┬─────────────────────┘
+             │
+             ▼
+┌──────────────────────────────────┐
+│  5. CLIENT: VERIFY HMAC          │
+│  - Recalculate HMAC              │
+│  - Compare with stored signature │
+│  - FAIL if mismatch              │
+└────────────┬─────────────────────┘
+             │
+             ▼
+┌──────────────────────────────────┐
+│  6. CLIENT: UNWRAP DEK           │
+│  - Algorithm: RSA-4096-OAEP      │
+│  - Input: wrapped DEK            │
+│  - Key: user private key         │
+│  - Output: plain DEK             │
+└────────────┬─────────────────────┘
+             │
+             ▼
+┌──────────────────────────────────┐
+│  7. CLIENT: DECRYPT FILE         │
+│  - Algorithm: AES-256-GCM        │
+│  - Input: ciphertext, DEK, IV    │
+│  - Verify: auth tag              │
+│  - Output: original plaintext    │
+└────────────┬─────────────────────┘
+             │
+             ▼
+┌──────────────────────────────────┐
+│  8. CREATE DOWNLOAD              │
+│  - Create Blob                   │
+│  - Generate download URL         │
+│  - Trigger browser download      │
+└──────────────────────────────────┘
+```
+
+---
+
+## 4. Cryptographic Architecture
+
+### Envelope Encryption Design
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    ENVELOPE ENCRYPTION                           │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  WHY?                                                           │
+│  ─────                                                          │
+│  Problem 1: RSA can only encrypt ~470 bytes (4096-bit key)      │
+│  Problem 2: AES is symmetric - need secure key exchange         │
+│                                                                  │
+│  Solution: Use both!                                            │
+│  ───────────────────                                            │
+│  • AES encrypts the data (fast, unlimited size)                 │
+│  • RSA encrypts the AES key (secure key distribution)           │
+│                                                                  │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│   ┌─────────────┐          ┌─────────────┐                      │
+│   │  Plaintext  │          │    DEK      │                      │
+│   │  (100 MB)   │          │  (32 bytes) │                      │
+│   └──────┬──────┘          └──────┬──────┘                      │
+│          │                        │                              │
+│          │                        │                              │
+│          ▼                        ▼                              │
+│   ┌──────────────┐         ┌──────────────┐                     │
+│   │ AES-256-GCM  │         │ RSA-4096-OAEP│                     │
+│   │ (symmetric)  │         │ (asymmetric) │                     │
+│   └──────┬───────┘         └──────┬───────┘                     │
+│          │                        │                              │
+│          ▼                        ▼                              │
+│   ┌──────────────┐         ┌──────────────┐                     │
+│   │  Ciphertext  │         │  Wrapped DEK │                     │
+│   │  (100 MB)    │         │  (512 bytes) │                     │
+│   └──────────────┘         └──────────────┘                     │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Key Hierarchy
+
+```
+                    ┌─────────────────────────┐
+                    │     User Password       │
+                    │     (known only to      │
+                    │        user)            │
+                    └───────────┬─────────────┘
+                                │
+                                │ PBKDF2 (100k iterations)
+                                ▼
+                    ┌─────────────────────────┐
+                    │   Password-Derived Key  │
+                    │   (AES-256)             │
+                    └───────────┬─────────────┘
+                                │
+                                │ Encrypts
+                                ▼
+┌───────────────────────────────────────────────────────────────────┐
+│                     USER KEY PAIR                                  │
+│  ┌──────────────────────┐    ┌──────────────────────┐            │
+│  │  RSA-4096 Public Key │    │ RSA-4096 Private Key │            │
+│  │  (stored plaintext)  │    │ (encrypted w/ pwd key)│            │
+│  └──────────┬───────────┘    └──────────┬───────────┘            │
+└─────────────┼────────────────────────────┼────────────────────────┘
+              │                            │
+              │ Wraps DEKs                 │ Unwraps DEKs
+              ▼                            ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                      FILE ENCRYPTION                             │
+│                                                                  │
+│   ┌─────────────────┐         ┌─────────────────┐               │
+│   │ File 1 DEK      │         │ File 2 DEK      │    ...        │
+│   │ (AES-256)       │         │ (AES-256)       │               │
+│   │ wrapped w/ RSA  │         │ wrapped w/ RSA  │               │
+│   └─────────────────┘         └─────────────────┘               │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 5. Storage Architecture
+
+### Multi-Cloud Storage Design
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    STORAGE ABSTRACTION LAYER                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│   ┌─────────────────────────────────────────────────────────┐   │
+│   │                  Storage Interface                       │   │
+│   │  upload(key, data, metadata) → { key, url }             │   │
+│   │  download(key) → Uint8Array                             │   │
+│   │  delete(key) → void                                     │   │
+│   │  exists(key) → boolean                                  │   │
+│   └─────────────────────────────────────────────────────────┘   │
+│                             │                                    │
+│              ┌──────────────┼──────────────┐                    │
+│              │              │              │                    │
+│              ▼              ▼              ▼                    │
+│   ┌──────────────┐  ┌──────────────┐  ┌──────────────┐         │
+│   │   AWS S3     │  │   GCP Cloud  │  │   Local      │         │
+│   │   Adapter    │  │   Storage    │  │   Storage    │         │
+│   │              │  │   Adapter    │  │   (Dev)      │         │
+│   └──────────────┘  └──────────────┘  └──────────────┘         │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### S3 Object Structure
+
+```
+s3://cryptovault-bucket/
+├── encrypted/
+│   └── {userId}/
+│       ├── {timestamp}-{randomId}-{filename}.enc
+│       ├── {timestamp}-{randomId}-{filename}.enc
+│       └── ...
+│
+└── metadata/
+    └── (future: encrypted search indices)
+```
+
+### Object Metadata
+
+```json
+{
+  "x-amz-meta-original-filename": "document.pdf",
+  "x-amz-meta-content-type": "application/pdf",
+  "x-amz-meta-encryption-algorithm": "AES-256-GCM",
+  "x-amz-meta-upload-timestamp": "1704783600000"
+}
+```
+
+---
+
+## 6. Database Architecture
+
+### Entity Relationship Design
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         DATABASE SCHEMA                          │
+└─────────────────────────────────────────────────────────────────┘
+
+                    ┌─────────────────┐
+                    │     users       │
+                    ├─────────────────┤
+                    │ id (PK)         │
+                    │ email (unique)  │
+                    │ passwordHash    │
+                    │ publicKey       │
+             ┌──────│ privateKeyEnc   │──────┐
+             │      │ ecdsaPublicKey  │      │
+             │      │ zkpPublicKey    │      │
+             │      │ mpcKeyShares    │      │
+             │      └────────┬────────┘      │
+             │               │               │
+             │    ┌──────────┴──────────┐    │
+             │    │                     │    │
+             ▼    ▼                     ▼    ▼
+    ┌─────────────────┐           ┌─────────────────┐
+    │     files       │           │  user_attributes│
+    ├─────────────────┤           ├─────────────────┤
+    │ id (PK)         │           │ id (PK)         │
+    │ userId (FK)     │           │ userId (FK)     │
+    │ originalFilename│           │ key             │
+    │ encryptedDEK    │           │ value           │
+    │ storageKey      │           └─────────────────┘
+    │ iv, authTag     │
+    │ hmacSignature   │
+    └────────┬────────┘
+             │
+    ┌────────┴────────┐
+    │                 │
+    ▼                 ▼
+┌─────────────┐  ┌─────────────────┐
+│ shared_files│  │   audit_logs    │
+├─────────────┤  ├─────────────────┤
+│ id (PK)     │  │ id (PK)         │
+│ fileId (FK) │  │ userId (FK)     │
+│ sharedBy    │  │ fileId (FK)     │
+│ sharedWith  │  │ action          │
+│ reEncKey    │  │ signature       │
+│ canDownload │  │ previousHash    │
+│ expiresAt   │  │ timestamp       │
+└─────────────┘  └─────────────────┘
+```
+
+### Indexing Strategy
+
+```sql
+-- High-frequency queries optimized
+CREATE INDEX idx_files_userid ON files(userId);
+CREATE INDEX idx_files_uploaded ON files(uploadedAt);
+CREATE INDEX idx_audit_userid ON audit_logs(userId);
+CREATE INDEX idx_audit_timestamp ON audit_logs(timestamp);
+CREATE INDEX idx_shared_fileid ON shared_files(fileId);
+```
+
+---
+
+## 7. API Architecture
+
+### REST API Design
+
+```
+/api
+├── /auth
+│   ├── POST /register     # Create account + generate keys
+│   ├── POST /login        # Authenticate + issue JWT
+│   ├── POST /logout       # Clear session
+│   └── GET  /me           # Current user info
+│
+├── /files
+│   ├── POST /upload       # Upload encrypted file
+│   ├── GET  /download     # Download encrypted file
+│   ├── GET  /list         # List user's files
+│   └── DELETE /delete     # Soft delete file
+│
+├── /share
+│   ├── POST /create       # Create share with PRE
+│   └── POST /revoke       # Revoke access
+│
+├── /audit
+│   └── GET  /             # Fetch audit logs
+│
+├── /metrics
+│   └── GET  /             # Performance metrics
+│
+└── /users
+    └── GET  /{id}         # Get user public key (for sharing)
+```
+
+### Request/Response Format
+
+```typescript
+// Upload Request
+POST /api/files/upload
+Content-Type: multipart/form-data
+
+{
+  encryptedData: string,    // Base64 ciphertext
+  metadata: {
+    originalName: string,
+    mimeType: string,
+    size: number
+  },
+  crypto: {
+    encryptedDEK: string,   // RSA-wrapped DEK
+    iv: string,             // Base64 IV
+    authTag: string,        // Base64 auth tag
+    hmac: string,           // HMAC-SHA512
+    algorithm: string       // "AES-256-GCM"
+  }
+}
+
+// Upload Response
+{
+  success: true,
+  file: {
+    id: string,
+    name: string,
+    size: number,
+    encryptedSize: number,
+    uploadedAt: string,
+    storageProvider: string,
+    encryptionLayers: string[]
+  },
+  metrics: {
+    uploadDuration: number,
+    throughput: string
+  }
+}
+```
+
+---
+
+## 8. Security Architecture
+
+### Authentication Flow
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     AUTHENTICATION FLOW                          │
+└─────────────────────────────────────────────────────────────────┘
+
+  ┌──────────┐                              ┌──────────┐
+  │  Client  │                              │  Server  │
+  └────┬─────┘                              └────┬─────┘
+       │                                         │
+       │  POST /api/auth/login                   │
+       │  { email, password }                    │
+       │────────────────────────────────────────▶│
+       │                                         │
+       │                            ┌────────────┴────────────┐
+       │                            │ 1. Find user by email   │
+       │                            │ 2. bcrypt.compare()     │
+       │                            │ 3. Generate JWT token   │
+       │                            │ 4. Set HTTP-only cookie │
+       │                            └────────────┬────────────┘
+       │                                         │
+       │  { user, encryptedPrivateKey }         │
+       │◀────────────────────────────────────────│
+       │  Set-Cookie: auth-token=<JWT>          │
+       │                                         │
+       │                                         │
+  ┌────┴────────────────────────────────────────┴────┐
+  │              CLIENT-SIDE KEY MANAGEMENT          │
+  │                                                  │
+  │  1. Derive password key (PBKDF2)                │
+  │  2. Decrypt private key                         │
+  │  3. Store in browser memory (not localStorage!) │
+  │  4. Use for file decryption                     │
+  └──────────────────────────────────────────────────┘
+```
+
+### Authorization Check Flow
+
+```
+Every API Request:
+
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   Request   │────▶│  Middleware │────▶│   Route     │
+│  (Cookie)   │     │  (JWT Check)│     │  Handler    │
+└─────────────┘     └──────┬──────┘     └─────────────┘
+                           │
+                           ▼
+              ┌────────────────────────┐
+              │  1. Extract JWT        │
+              │  2. Verify signature   │
+              │  3. Check expiration   │
+              │  4. Extract userId     │
+              └────────────────────────┘
+                           │
+              ┌────────────┴────────────┐
+              │                         │
+              ▼                         ▼
+        ┌─────────┐              ┌─────────┐
+        │ VALID   │              │ INVALID │
+        │ Continue│              │ 401 Error│
+        └─────────┘              └─────────┘
+```
+
+---
+
+## 9. Scalability Considerations
+
+### Current Design Limitations
+
+| Component | Limit | Mitigation |
+|-----------|-------|------------|
+| File size | Browser memory | Chunked upload (future) |
+| Concurrent users | Single server | Horizontal scaling |
+| Database | Single PostgreSQL | Read replicas |
+| S3 | 5TB per object | Object splitting |
+
+### Future Scaling Architecture
+
+```
+                         ┌─────────────────┐
+                         │  Load Balancer  │
+                         └────────┬────────┘
+                                  │
+              ┌───────────────────┼───────────────────┐
+              │                   │                   │
+              ▼                   ▼                   ▼
+       ┌────────────┐      ┌────────────┐      ┌────────────┐
+       │  Server 1  │      │  Server 2  │      │  Server 3  │
+       │  (Next.js) │      │  (Next.js) │      │  (Next.js) │
+       └────────────┘      └────────────┘      └────────────┘
+              │                   │                   │
+              └───────────────────┼───────────────────┘
+                                  │
+                                  ▼
+                         ┌─────────────────┐
+                         │   PostgreSQL    │
+                         │   (Primary)     │
+                         │       +         │
+                         │   Read Replicas │
+                         └─────────────────┘
+```
+
+---
+
+## 10. Design Decisions
+
+### Why Client-Side Encryption?
+
+**Decision**: All file encryption happens in the browser.
+
+**Alternatives Considered**:
+1. Server-side encryption (easier but provider has keys)
+2. Hybrid (partial client, partial server)
+
+**Rationale**:
+- Zero-knowledge architecture requires client encryption
+- User privacy is paramount
+- Regulatory compliance (GDPR, HIPAA)
+- Trust minimization
+
+### Why RSA-4096 over RSA-2048?
+
+**Decision**: Use 4096-bit RSA keys.
+
+**Rationale**:
+- Higher security margin (140 bits vs 112 bits)
+- Long-term file storage requires future-proofing
+- Key generation is one-time cost
+- Acceptable performance for key wrapping
+
+### Why PostgreSQL over MongoDB?
+
+**Decision**: Use PostgreSQL with Prisma ORM.
+
+**Rationale**:
+- Relational data (users, files, shares, logs)
+- Strong consistency guarantees
+- ACID transactions
+- Prisma type safety
+- Easier audit compliance
+
+### Why Web Crypto API?
+
+**Decision**: Use native browser cryptography.
+
+**Alternatives Considered**:
+1. crypto-js (pure JS)
+2. libsodium.js (WASM)
+
+**Rationale**:
+- Hardware-accelerated
+- No external dependencies
+- Browser-verified security
+- Standard compliance (FIPS)
+
+### Why JWT in HTTP-only Cookies?
+
+**Decision**: Store JWT in HTTP-only, secure cookies.
+
+**Alternatives Considered**:
+1. localStorage (vulnerable to XSS)
+2. sessionStorage (same vulnerability)
+3. Memory only (lost on refresh)
+
+**Rationale**:
+- Protected from XSS (JS can't read)
+- Automatic transmission
+- SameSite protection against CSRF
+- Survives page refresh
+
+---
+
+*Last Updated: January 2026*
+*Architecture Version: 1.0*
+
+
+---
+
+
+# Technical Documentation & Cryptography
+
+
+# 🔬 CryptoVault Enterprise - Technical Documentation
+
+> Detailed technical documentation of all cryptographic implementations
+
+---
+
+## Table of Contents
+
+1. [Core Encryption Modules](#1-core-encryption-modules)
+2. [Key Exchange Protocols](#2-key-exchange-protocols)
+3. [Digital Signatures](#3-digital-signatures)
+4. [Advanced Cryptography](#4-advanced-cryptography)
+5. [Authentication Systems](#5-authentication-systems)
+6. [Storage & Cloud Integration](#6-storage--cloud-integration)
+7. [Security Metrics & Analytics](#7-security-metrics--analytics)
+
+---
+
+## 1. Core Encryption Modules
+
+### 1.1 AES-256-GCM (`lib/crypto/aes.ts`)
+
+**Purpose:** Primary symmetric encryption for file data
+
+**Algorithm Details:**
+- **Cipher:** AES (Advanced Encryption Standard)
+- **Key Size:** 256 bits
+- **Mode:** GCM (Galois/Counter Mode)
+- **IV Size:** 96 bits (12 bytes)
+- **Tag Size:** 128 bits (16 bytes)
+
+**Security Properties:**
+- Authenticated encryption (confidentiality + integrity)
+- Parallelizable for performance
+- Built-in tampering detection via auth tag
+
+**Key Functions:**
+```typescript
+// Generate random AES-256 key
+generateAESKey(): Promise<CryptoKey>
+
+// Export key to base64
+exportAESKey(key: CryptoKey): Promise<string>
+
+// Import key from base64
+importAESKey(base64Key: string): Promise<CryptoKey>
+
+// Encrypt data
+encryptAES(plaintext: string | ArrayBuffer, key?: CryptoKey): Promise<AESEncryptResult>
+
+// Decrypt data
+decryptAES(params: AESDecryptParams): Promise<string>
+
+// Encrypt file buffer
+encryptFileBuffer(data: ArrayBuffer, key?: CryptoKey): Promise<AESEncryptResult & { key: CryptoKey }>
+```
+
+**Output Format:**
+```typescript
+interface AESEncryptResult {
+    ciphertext: string;  // Base64 encoded
+    iv: string;          // Base64 encoded (12 bytes)
+    authTag: string;     // Base64 encoded (16 bytes)
+    algorithm: 'AES-256-GCM';
+}
+```
+
+---
+
+### 1.2 RSA-4096-OAEP (`lib/crypto/rsa.ts`)
+
+**Purpose:** Asymmetric encryption for key wrapping (envelope encryption)
+
+**Algorithm Details:**
+- **Key Size:** 4096 bits
+- **Padding:** OAEP (Optimal Asymmetric Encryption Padding)
+- **Hash:** SHA-256
+- **Max Plaintext:** ~470 bytes (for 4096-bit key)
+
+**Security Properties:**
+- Provides key encapsulation
+- OAEP padding prevents chosen ciphertext attacks
+- 4096-bit provides ~140 bits of security
+
+**Key Functions:**
+```typescript
+// Generate RSA key pair
+generateRSAKeyPair(): Promise<{ publicKey: CryptoKey; privateKey: CryptoKey }>
+
+// Export to PEM format
+exportRSAKeyPair(keyPair: {...}): Promise<RSAKeyPair>
+
+// Import public key from PEM
+importRSAPublicKey(pemKey: string): Promise<CryptoKey>
+
+// Import private key from PEM
+importRSAPrivateKey(pemKey: string): Promise<CryptoKey>
+
+// Encrypt (for key wrapping)
+encryptRSA(plaintext: string | ArrayBuffer, publicKey: CryptoKey | string): Promise<RSAEncryptResult>
+
+// Decrypt (for key unwrapping)
+decryptRSA(ciphertext: string, privateKey: CryptoKey | string): Promise<string>
+```
+
+---
+
+### 1.3 Envelope Encryption (`lib/crypto/envelope-encryption.ts`)
+
+**Purpose:** Combines AES + RSA for efficient secure file encryption
+
+**Pattern:**
+1. Generate random DEK (Data Encryption Key)
+2. Encrypt data with DEK using AES-256-GCM
+3. Encrypt DEK with recipient's RSA public key
+4. Generate HMAC for integrity verification
+
+**Why Envelope Encryption?**
+- AES is fast but requires key exchange
+- RSA is secure but slow and limited to ~470 bytes
+- Envelope: Use AES for data, RSA for key = best of both
+
+**Key Functions:**
+```typescript
+// Encrypt with envelope pattern
+envelopeEncrypt(
+    plaintext: string | ArrayBuffer,
+    recipientPublicKey: CryptoKey | string
+): Promise<EnvelopeEncryptResult>
+
+// Decrypt envelope-encrypted data
+envelopeDecrypt(
+    encryptedResult: EnvelopeEncryptResult,
+    recipientPrivateKey: CryptoKey | string
+): Promise<string>
+
+// Encrypt file with envelope pattern
+envelopeEncryptFile(
+    file: File,
+    recipientPublicKey: CryptoKey | string,
+    onProgress?: (progress: number) => void
+): Promise<EnvelopeEncryptResult & { fileMetadata: {...} }>
+
+// Re-encrypt DEK for sharing (proxy re-encryption)
+reEncryptDEK(
+    encryptedDEK: string,
+    originalPrivateKey: CryptoKey | string,
+    newRecipientPublicKey: CryptoKey | string
+): Promise<string>
+```
+
+---
+
+### 1.4 Hashing (`lib/crypto/sha.ts`, `lib/crypto/hashing.ts`)
+
+**Purpose:** Cryptographic hash functions for integrity and indexing
+
+**Implementations:**
+- SHA-256 (256-bit output)
+- SHA-512 (512-bit output)
+- MD5 (legacy, insecure - for comparison only)
+
+**Additional Features:**
+- Merkle tree construction
+- Merkle proof generation and verification
+- File chunk integrity verification
+
+**Key Functions:**
+```typescript
+// SHA-256 hash
+sha256(data: string): Promise<string>
+
+// SHA-512 hash
+sha512(data: string): Promise<string>
+
+// Build Merkle tree from data blocks
+buildMerkleTree(dataBlocks: string[]): Promise<MerkleTree>
+
+// Generate proof for leaf
+generateMerkleProof(tree: MerkleTree, leafIndex: number): Promise<MerkleProof>
+
+// Verify Merkle proof
+verifyMerkleProof(proof: MerkleProof): Promise<boolean>
+
+// Create Merkle tree from file (chunked)
+createFileMerkleTree(fileBuffer: ArrayBuffer, chunkSize?: number): Promise<MerkleTree>
+```
+
+---
+
+### 1.5 HMAC (`lib/crypto/hmac.ts`)
+
+**Purpose:** Message authentication codes for integrity verification
+
+**Algorithm:** HMAC-SHA512
+
+**Key Functions:**
+```typescript
+// Generate HMAC key
+generateHMACKey(): Promise<CryptoKey>
+
+// Sign message
+signHMAC(message: string, key: CryptoKey): Promise<string>
+
+// Verify signature
+verifyHMAC(message: string, signature: string, key: CryptoKey): Promise<boolean>
+```
+
+---
+
+## 2. Key Exchange Protocols
+
+### 2.1 Diffie-Hellman (`lib/crypto/diffie-hellman.ts`)
+
+**Purpose:** Secure key exchange over insecure channel
+
+**Parameters:**
+- Uses RFC 3526 standard groups (DH Group 14, 15)
+- 2048-bit and 3072-bit modulus options
+
+**Security:**
+- Forward secrecy (new session = new keys)
+- Resistant to passive eavesdropping
+
+**Key Functions:**
+```typescript
+// Generate DH key pair
+generateDHKeyPair(params: DHParameters): Promise<DHKeyPair>
+
+// Compute shared secret
+computeSharedSecret(
+    theirPublicKey: string,
+    myPrivateKey: string,
+    params: DHParameters
+): string
+
+// Derive AES key from shared secret
+deriveKeyFromDH(
+    sharedSecret: string,
+    salt?: Uint8Array,
+    info?: Uint8Array
+): Promise<CryptoKey>
+
+// Simulate complete key exchange
+simulateDHKeyExchange(params?: DHParameters): Promise<{
+    alice: DHKeyPair;
+    bob: DHKeyPair;
+    aliceSharedSecret: string;
+    bobSharedSecret: string;
+    match: boolean;
+}>
+```
+
+### 2.2 ECDH (`lib/crypto/ecdh.ts`)
+
+**Purpose:** Elliptic curve Diffie-Hellman for more efficient key agreement
+
+**Curve:** P-384 (NIST standard)
+
+**Advantages over classical DH:**
+- Smaller key sizes (384-bit = 7680-bit RSA equivalent)
+- Faster computation
+- Same security level
+
+---
+
+## 3. Digital Signatures
+
+### 3.1 ECDSA P-384 (`lib/crypto/ecdsa.ts`)
+
+**Purpose:** Digital signatures for audit logs and file integrity
+
+**Algorithm Details:**
+- Curve: NIST P-384
+- Hash: SHA-384
+- Signature size: ~96 bytes
+
+**Use Cases:**
+- Signing audit log entries
+- Verifying file authenticity
+- Certificate signing
+
+**Key Functions:**
+```typescript
+// Generate key pair
+generateECDSAKeyPair(): Promise<CryptoKeyPair>
+
+// Sign data
+signECDSA(data: string | ArrayBuffer, privateKey: CryptoKey): Promise<string>
+
+// Verify signature
+verifyECDSA(
+    data: string | ArrayBuffer,
+    signature: string,
+    publicKey: CryptoKey
+): Promise<boolean>
+
+// Sign JSON object
+signJSON(obj: object, privateKey: CryptoKey): Promise<string>
+
+// Verify JSON signature
+verifyJSON(obj: object, signature: string, publicKey: CryptoKey): Promise<boolean>
+```
+
+### 3.2 EdDSA (`lib/crypto/eddsa.ts`)
+
+**Purpose:** Alternative signature scheme using Edwards curves
+
+**Algorithm:** Ed25519
+
+**Advantages:**
+- Faster than ECDSA
+- Deterministic (no random nonce needed)
+- Simpler implementation
+
+---
+
+## 4. Advanced Cryptography
+
+### 4.1 Post-Quantum: CRYSTALS-Kyber (`lib/crypto/post-quantum/kyber.ts`)
+
+**Purpose:** Quantum-resistant key encapsulation
+
+**Algorithm:** Kyber-768 (NIST PQC standard)
+
+**Security:**
+- Based on Learning With Errors (LWE) problem
+- Resistant to Shor's algorithm (quantum)
+- Part of NIST standardization
+
+**Note:** Current implementation is simulated for demo purposes
+
+**Key Functions:**
+```typescript
+// Generate Kyber key pair
+generateKyberKeyPair(): Promise<KyberKeyPair>
+
+// Encapsulate (create shared secret)
+kyberEncapsulate(publicKey: string): Promise<KyberEncapsulation>
+
+// Decapsulate (recover shared secret)
+kyberDecapsulate(ciphertext: string, privateKey: string): Promise<string>
+
+// Check if PQC is enabled
+isPQCEnabled(): boolean
+```
+
+### 4.2 Quantum Key Distribution: BB84 (`lib/crypto/post-quantum/qkd.ts`)
+
+**Purpose:** Educational simulation of quantum key exchange
+
+**Protocol:** BB84 (Bennett-Brassard 1984)
+
+**Key Concepts:**
+- Quantum superposition for security
+- Eavesdropper detection via error rate
+- Information-theoretic security
+
+**Key Functions:**
+```typescript
+// Simulate BB84 without eavesdropper
+simulateBB84(numQubits?: number): QKDResult
+
+// Simulate BB84 with eavesdropper (Eve)
+simulateBB84WithEve(numQubits?: number): QKDResult
+
+// Compare classical vs quantum KD
+getQKDComparison(): {...}
+```
+
+### 4.3 Zero-Knowledge Proofs: Schnorr (`lib/crypto/zkp/schnorr.ts`)
+
+**Purpose:** Prove knowledge without revealing secret
+
+**Protocol:** Schnorr Identification
+
+**Properties:**
+- Completeness: Honest prover always convinces verifier
+- Soundness: Cheating prover cannot fool verifier
+- Zero-knowledge: Verifier learns nothing about secret
+
+**Key Functions:**
+```typescript
+// Generate key pair
+generateSchnorrKeyPair(): SchnorrKeyPair
+
+// Create commitment (prover step 1)
+createCommitment(): SchnorrChallenge
+
+// Generate challenge (verifier step 2)
+generateChallenge(commitment: string, publicKey: string, context?: string): string
+
+// Create response (prover step 3)
+createResponse(nonce: string, challenge: string, privateKey: string): SchnorrProof
+
+// Verify proof (verifier step 4)
+verifySchnorrProof(proof: SchnorrProof, challenge: string, publicKey: string): boolean
+```
+
+### 4.4 Secret Sharing: Shamir (`lib/crypto/mpc/shamir.ts`)
+
+**Purpose:** Split secret into n shares, any t can reconstruct
+
+**Algorithm:** Shamir's Secret Sharing (polynomial interpolation)
+
+**Use Cases:**
+- Key recovery without single point of failure
+- Multi-party authorization
+- Distributed key custody
+
+**Key Functions:**
+```typescript
+// Split secret into shares
+splitSecret(
+    secret: string,
+    totalShares: number,
+    threshold: number
+): SecretShare[]
+
+// Reconstruct from shares
+reconstructSecret(shares: SecretShare[]): string
+
+// Serialize/deserialize shares
+serializeShare(share: SecretShare): string
+deserializeShare(shareString: string): SecretShare
+
+// Verify share consistency
+verifyShareConsistency(shares: SecretShare[], threshold: number): boolean
+```
+
+### 4.5 Attribute-Based Encryption: CP-ABE (`lib/crypto/abe/cp-abe.ts`)
+
+**Purpose:** Policy-based access control for encrypted data
+
+**Type:** Ciphertext-Policy ABE
+
+**Policy Examples:**
+- `"(role:faculty AND dept:CSE)"`
+- `"(clearance:5) OR (role:admin)"`
+
+**Key Functions:**
+```typescript
+// Generate master keys
+generateMasterKey(): Promise<ABEMasterKey>
+
+// Generate user key based on attributes
+generateUserKey(
+    masterKey: ABEMasterKey,
+    userId: string,
+    attributes: Record<string, string>
+): Promise<ABEUserKey>
+
+// Encrypt with policy
+abeEncrypt(
+    data: string,
+    policy: string,
+    publicKey: string
+): Promise<ABECiphertext>
+
+// Decrypt (requires satisfying attributes)
+abeDecrypt(
+    ciphertext: ABECiphertext,
+    userKey: ABEUserKey
+): Promise<string>
+
+// Check if attributes satisfy policy
+satisfiesPolicy(
+    policy: string,
+    userAttributes: Record<string, string>
+): boolean
+```
+
+### 4.6 Fully Homomorphic Encryption: SEAL Wrapper (`lib/crypto/fhe/seal-wrapper.ts`)
+
+**Purpose:** Compute on encrypted data without decryption
+
+**Schemes:** BFV (integers), CKKS (real numbers)
+
+**Note:** Simulation mode for demo; real FHE requires Microsoft SEAL
+
+**Key Functions:**
+```typescript
+// Initialize FHE context
+initializeFHE(scheme?: 'BFV' | 'CKKS'): Promise<FHEContext>
+
+// Encrypt integer
+fheEncryptInteger(value: number, context: FHEContext): Promise<FHECiphertext>
+
+// Homomorphic addition
+fheAdd(cipher1: FHECiphertext, cipher2: FHECiphertext): Promise<FHECiphertext>
+
+// Homomorphic multiplication
+fheMultiply(cipher1: FHECiphertext, cipher2: FHECiphertext): Promise<FHECiphertext>
+
+// Decrypt result
+fheDecrypt(ciphertext: FHECiphertext, context: FHEContext): Promise<number>
+```
+
+### 4.7 Oblivious RAM: Path ORAM (`lib/crypto/oram/path-oram.ts`)
+
+**Purpose:** Hide access patterns from storage provider
+
+**Algorithm:** Path ORAM (Stefanov et al.)
+
+**Key Concept:**
+- Every access looks the same to observer
+- Read = Write (from observer's perspective)
+- Position map re-randomizes on each access
+
+**Key Functions:**
+```typescript
+// Initialize ORAM tree
+initializePathORAM(numBlocks: number, bucketSize?: number): Promise<PathORAMTree>
+
+// Read block (obliviously)
+oramRead(tree: PathORAMTree, blockId: number): Promise<string | null>
+
+// Write block (obliviously)
+oramWrite(tree: PathORAMTree, blockId: number, data: string): Promise<void>
+
+// Get ORAM statistics
+getORAMStats(tree: PathORAMTree): {...}
+
+// Demonstrate ORAM
+demonstrateORAM(): Promise<{ steps: string[]; stats: {...} }>
+```
+
+### 4.8 Proxy Re-Encryption: AFGH (`lib/crypto/proxy-re-encryption/afgh.ts`)
+
+**Purpose:** Secure file sharing without revealing original private key
+
+**Scheme:** AFGH (Ateniese et al.)
+
+**Workflow:**
+1. Alice encrypts file with her public key
+2. Alice generates re-encryption key (Alice→Bob)
+3. Proxy transforms ciphertext for Bob
+4. Bob decrypts with his private key
+5. **Proxy never sees plaintext!**
+
+**Key Functions:**
+```typescript
+// Generate re-encryption key
+generateReEncryptionKey(
+    delegatorPrivateKey: string,
+    delegatorKeyId: string,
+    delegateePublicKey: string,
+    delegateeKeyId: string
+): Promise<ProxyReEncryptionKey>
+
+// Re-encrypt ciphertext (by proxy)
+reEncrypt(
+    ciphertext: string,
+    reEncryptionKey: ProxyReEncryptionKey
+): Promise<ReEncryptedCiphertext>
+
+// Decrypt re-encrypted data
+decryptReEncrypted(
+    reEncrypted: ReEncryptedCiphertext,
+    delegateePrivateKey: string,
+    reEncryptionKey: ProxyReEncryptionKey
+): Promise<string>
+```
+
+---
+
+## 5. Authentication Systems
+
+### 5.1 X.509 PKI (`lib/crypto/x509.ts`)
+
+**Purpose:** Public Key Infrastructure for certificate management
+
+**Features:**
+- Self-signed root CA generation
+- End-entity certificate signing
+- Certificate chain verification
+- CRL (Certificate Revocation List) creation
+
+**Key Functions:**
+```typescript
+// Create root CA certificate
+createRootCACertificate(
+    subject: X509Name,
+    validityDays?: number
+): Promise<{ certificate: X509Certificate; privateKey: CryptoKey }>
+
+// Create end-entity certificate
+createEndEntityCertificate(
+    subject: X509Name,
+    caCertificate: X509Certificate,
+    caPrivateKey: CryptoKey,
+    subjectPublicKey: CryptoKey,
+    validityDays?: number
+): Promise<X509Certificate>
+
+// Verify certificate chain
+verifyCertificateChain(
+    certificates: X509Certificate[],
+    trustedRoots: X509Certificate[]
+): Promise<{ valid: boolean; errors: string[]; chain: X509Certificate[] }>
+```
+
+### 5.2 Kerberos Ticket System (`lib/crypto/kerberos.ts`)
+
+**Purpose:** Network authentication protocol simulation
+
+**Components:**
+- Key Distribution Center (KDC)
+- Authentication Service (AS)
+- Ticket Granting Service (TGS)
+- Application Server (AP)
+
+**Workflow:**
+1. User → AS: "I'm Alice, give me TGT"
+2. AS → User: TGT + Session Key
+3. User → TGS: TGT + "I want fileserver"
+4. TGS → User: Service Ticket
+5. User → Service: Ticket + Authenticator
+6. Service: Verified!
+
+**Key Functions:**
+```typescript
+// Request TGT from Authentication Service
+requestTGT(
+    clientPrincipal: KerberosPrincipal,
+    password: string
+): Promise<TicketGrantingTicket>
+
+// Request service ticket from TGS
+requestServiceTicket(
+    tgt: TicketGrantingTicket,
+    tgsSessionKey: CryptoKey,
+    servicePrincipal: KerberosPrincipal,
+    authenticator: Authenticator
+): Promise<ServiceTicket>
+
+// Create authenticator
+createAuthenticator(
+    clientPrincipal: KerberosPrincipal,
+    sessionKey: CryptoKey,
+    checksum?: string
+): Promise<string>
+
+// Verify authenticator (at service)
+verifyAuthenticator(
+    encryptedAuthenticator: string,
+    sessionKey: CryptoKey,
+    expectedPrincipal: KerberosPrincipal
+): Promise<{ valid: boolean; authenticator?: Authenticator; error?: string }>
+
+// Demonstrate full flow
+demonstrateKerberosFlow(): Promise<{ steps: string[]; success: boolean }>
+```
+
+---
+
+## 6. Storage & Cloud Integration
+
+### 6.1 AWS S3 Integration
+
+**Purpose:** Primary encrypted file storage
+
+**Configuration:**
+```env
+AWS_REGION=ap-south-1
+AWS_ACCESS_KEY_ID=...
+AWS_SECRET_ACCESS_KEY=...
+AWS_S3_BUCKET=your-bucket-name
+```
+
+**Operations:**
+- `PutObjectCommand` - Upload encrypted file
+- `GetObjectCommand` - Download encrypted file
+- Metadata storage for encryption parameters
+
+### 6.2 AWS KMS Integration
+
+**Purpose:** Additional key wrapping layer
+
+**Configuration:**
+```env
+AWS_KMS_KEY_ARN=arn:aws:kms:region:account:key/id
+```
+
+**Operations:**
+- `EncryptCommand` - Wrap DEK with KMS
+- `DecryptCommand` - Unwrap DEK
+
+### 6.3 Local Storage Fallback (`lib/storage/local-storage.ts`)
+
+**Purpose:** Development without cloud dependencies
+
+**Features:**
+- Uses browser localStorage
+- Full API compatibility with cloud adapters
+- Automatic persistence
+
+---
+
+## 7. Security Metrics & Analytics
+
+### 7.1 Encryption Metrics
+
+**Tracked Operations:**
+- `AES_ENCRYPT` / `AES_DECRYPT`
+- `RSA_ENCRYPT` / `RSA_DECRYPT`
+- `FILE_ENCRYPT_UPLOAD` / `FILE_DECRYPT_DOWNLOAD`
+- `FHE_COMPUTE`
+
+**Recorded Data:**
+- Operation duration (ms)
+- File size (bytes)
+- Throughput (MB/s)
+- Algorithm used
+- Key size
+- Error occurrence
+
+### 7.2 Audit Logging
+
+**Log Entry Fields:**
+- User ID
+- File ID
+- Action type
+- Timestamp
+- IP address
+- User agent
+- ECDSA signature
+- Previous hash (chain)
+- Merkle proof
+
+**Actions Logged:**
+- `FILE_UPLOADED`
+- `FILE_DOWNLOADED`
+- `FILE_SHARED`
+- `FILE_DELETED`
+- `LOGIN`
+- `LOGOUT`
+- `KEY_GENERATED`
+
+### 7.3 Security Events
+
+**Event Types:**
+- `FAILED_LOGIN`
+- `SUSPICIOUS_DOWNLOAD`
+- `ANOMALY`
+- `INTEGRITY_FAILURE`
+- `KEY_COMPROMISE`
+
+**Severity Levels:**
+- LOW
+- MEDIUM
+- HIGH
+- CRITICAL
+
+---
+
+## Appendix: Algorithm Security Comparison
+
+| Algorithm | Key Size | Security Level | Quantum Safe | Use Case |
+|-----------|----------|----------------|--------------|----------|
+| AES-256-GCM | 256 bits | 128 bits | Grover's ÷2 | Data encryption |
+| RSA-4096 | 4096 bits | ~140 bits | ❌ No | Key wrapping |
+| ECDSA P-384 | 384 bits | 192 bits | ❌ No | Signatures |
+| Ed25519 | 256 bits | 128 bits | ❌ No | Signatures |
+| Kyber-768 | N/A | ~180 bits | ✅ Yes | Key encapsulation |
+| SHA-256 | N/A | 128 bits | ✅ Yes | Hashing |
+| SHA-512 | N/A | 256 bits | ✅ Yes | Hashing |
+
+---
+
+## Appendix: NIST Compliance
+
+| Requirement | CryptoVault Implementation |
+|-------------|---------------------------|
+| **FIPS 197** | AES-256 encryption |
+| **SP 800-38D** | GCM mode with 96-bit IV |
+| **FIPS 186-5** | ECDSA P-384 signatures |
+| **SP 800-56A** | ECDH key agreement |
+| **SP 800-132** | PBKDF2 key derivation |
+| **SP 800-185** | SHA-3 (optional) |
+| **SP 800-208** | Post-quantum readiness |
+
+---
+
+*Last Updated: January 2026*
+
+
+---
+
+
+# Security & Threat Model
+
+
+# 🔒 CryptoVault Enterprise - Security Documentation
+
+> Security architecture, threat model, and best practices
+
+---
+
+## Table of Contents
+
+1. [Security Architecture Overview](#1-security-architecture-overview)
+2. [Threat Model](#2-threat-model)
+3. [Cryptographic Security](#3-cryptographic-security)
+4. [Data Protection](#4-data-protection)
+5. [Authentication & Authorization](#5-authentication--authorization)
+6. [Audit & Compliance](#6-audit--compliance)
+7. [Incident Response](#7-incident-response)
+8. [Security Best Practices](#8-security-best-practices)
+
+---
+
+## 1. Security Architecture Overview
+
+### Zero-Knowledge Design Principles
+
+CryptoVault is built on **zero-knowledge architecture**, meaning:
+
+1. **The server never sees your plaintext data**
+   - All encryption happens in your browser
+   - Only encrypted bytes are transmitted
+
+2. **The server never holds your keys**
+   - Your private key is encrypted with your password
+   - Only the encrypted private key is stored
+
+3. **We cannot recover your data**
+   - No backdoors or master keys exist
+   - Lost password = lost access (by design)
+
+### Defense in Depth
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    PERIMETER                             │
+│  • HTTPS/TLS 1.3                                        │
+│  • CORS policies                                        │
+│  • Rate limiting                                        │
+├─────────────────────────────────────────────────────────┤
+│                  AUTHENTICATION                          │
+│  • JWT with short expiry                                │
+│  • HTTP-only cookies                                    │
+│  • Password hashing (bcrypt)                            │
+├─────────────────────────────────────────────────────────┤
+│                  AUTHORIZATION                           │
+│  • File ownership verification                          │
+│  • Share permission checks                              │
+│  • Attribute-based access control                       │
+├─────────────────────────────────────────────────────────┤
+│                   ENCRYPTION                             │
+│  • AES-256-GCM (data)                                   │
+│  • RSA-4096-OAEP (keys)                                 │
+│  • AWS KMS (additional wrap)                            │
+├─────────────────────────────────────────────────────────┤
+│                    INTEGRITY                             │
+│  • HMAC-SHA512                                          │
+│  • GCM authentication tag                               │
+│  • Merkle tree verification                             │
+├─────────────────────────────────────────────────────────┤
+│                   AUDIT TRAIL                            │
+│  • ECDSA-signed logs                                    │
+│  • Hash-chained entries                                 │
+│  • Tamper detection                                     │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 2. Threat Model
+
+### Assets to Protect
+
+| Asset | Sensitivity | Protection |
+|-------|-------------|------------|
+| User files | High | AES-256-GCM + RSA-4096 |
+| User private keys | Critical | Password-encrypted |
+| User credentials | Critical | bcrypt hashed |
+| Session tokens | High | JWT + HTTP-only cookies |
+| Audit logs | Medium | ECDSA signed + chained |
+| Metadata | Medium | Stored server-side |
+
+### Threat Actors
+
+| Actor | Capability | Mitigation |
+|-------|------------|------------|
+| **External Attacker** | Network interception | TLS 1.3, E2E encryption |
+| **Malicious Insider** | Server access | Zero-knowledge, no plaintext |
+| **Compromised Server** | Database access | Encrypted DEKs, no raw keys |
+| **Cloud Provider** | Storage access | Client-side encryption |
+| **Quantum Computer** | Break RSA/ECC | Kyber PQC hybrid |
+| **Eavesdropper** | Passive monitoring | E2E encryption |
+
+### Attack Vectors & Mitigations
+
+#### 1. Man-in-the-Middle Attack
+- **Threat**: Intercept data in transit
+- **Mitigation**: 
+  - TLS 1.3 for all connections
+  - HSTS headers
+  - Certificate pinning (future)
+  - Client-side encryption (even if TLS fails)
+
+#### 2. Server Compromise
+- **Threat**: Attacker gains server access
+- **Mitigation**:
+  - Zero-knowledge: server has no plaintext
+  - DEKs wrapped with user public keys
+  - Private keys encrypted with user passwords
+  - AWS KMS additional protection
+
+#### 3. Database Breach
+- **Threat**: SQL injection or direct DB access
+- **Mitigation**:
+  - Prisma ORM (parameterized queries)
+  - No plaintext in database
+  - Encrypted DEKs only
+  - Password hashes (bcrypt)
+
+#### 4. Brute Force Attacks
+- **Threat**: Password guessing
+- **Mitigation**:
+  - bcrypt with high cost factor
+  - Rate limiting on login
+  - Account lockout (future)
+  - 2FA support (future)
+
+#### 5. Quantum Attacks
+- **Threat**: Future quantum computers break RSA
+- **Mitigation**:
+  - CRYSTALS-Kyber hybrid encryption
+  - Post-quantum readiness
+  - Algorithm agility for migration
+
+#### 6. Replay Attacks
+- **Threat**: Reuse old authentication tokens
+- **Mitigation**:
+  - JWT expiration (short-lived)
+  - Refresh token rotation (future)
+  - Timestamp validation
+
+#### 7. Cross-Site Scripting (XSS)
+- **Threat**: Inject malicious scripts
+- **Mitigation**:
+  - React auto-escaping
+  - Content Security Policy
+  - HTTP-only cookies (no JS access)
+
+#### 8. Cross-Site Request Forgery (CSRF)
+- **Threat**: Unauthorized actions
+- **Mitigation**:
+  - SameSite cookies
+  - CORS policies
+  - CSRF tokens (future)
+
+---
+
+## 3. Cryptographic Security
+
+### Algorithm Security Levels
+
+| Algorithm | Key Size | Security Level | Quantum Safe |
+|-----------|----------|----------------|--------------|
+| AES-256-GCM | 256 bits | 128 bits* | Partial** |
+| RSA-4096 | 4096 bits | ~140 bits | ❌ No |
+| ECDSA P-384 | 384 bits | 192 bits | ❌ No |
+| ECDH P-384 | 384 bits | 192 bits | ❌ No |
+| SHA-256 | N/A | 128 bits | ✅ Yes |
+| SHA-512 | N/A | 256 bits | ✅ Yes |
+| Kyber-768 | N/A | ~180 bits | ✅ Yes |
+
+*Against classical computers
+**Grover's algorithm reduces to 128-bit effective security
+
+### Key Generation
+
+```
+User Registration:
+├── Generate RSA-4096 keypair (browser)
+├── Generate ECDSA P-384 keypair (browser)
+├── Derive password key (PBKDF2, 100k iterations)
+├── Encrypt private keys with password key
+└── Store encrypted keys server-side
+
+File Upload:
+├── Generate random DEK (AES-256, 256 bits)
+├── Generate random IV (96 bits)
+├── Encrypt file with DEK
+├── Wrap DEK with user RSA public key
+└── Store wrapped DEK with file metadata
+```
+
+### Cryptographic Agility
+
+The system supports algorithm migration:
+- Modular crypto library design
+- Algorithm identifier stored with each file
+- Version field for future upgrades
+- Backward compatibility during transition
+
+---
+
+## 4. Data Protection
+
+### At Rest
+
+| Data Type | Storage | Encryption |
+|-----------|---------|------------|
+| File content | AWS S3 | AES-256-GCM (client) + S3 SSE |
+| Wrapped DEK | PostgreSQL | RSA-4096-OAEP + KMS |
+| User private key | PostgreSQL | AES-256 with password |
+| Password hash | PostgreSQL | bcrypt (not reversible) |
+| Metadata | PostgreSQL | Plaintext (non-sensitive) |
+
+### In Transit
+
+| Channel | Protection |
+|---------|------------|
+| Browser → Server | TLS 1.3 + Client encryption |
+| Server → AWS S3 | TLS 1.2+ (AWS) |
+| Server → PostgreSQL | TLS (connection string) |
+| Server → AWS KMS | TLS 1.2+ (AWS) |
+
+### Data Lifecycle
+
+```
+1. CREATION
+   └── Encrypted at source (browser)
+
+2. TRANSMISSION
+   └── TLS + already encrypted
+
+3. STORAGE
+   └── S3 + PostgreSQL (encrypted blobs)
+
+4. ACCESS
+   └── Verify ownership → Return encrypted → Decrypt in browser
+
+5. SHARING
+   └── Proxy re-encryption (new recipient key)
+
+6. DELETION
+   └── Soft delete → Hard delete after retention → S3 lifecycle
+```
+
+### Data Retention
+
+| Data Type | Retention | Hard Delete |
+|-----------|-----------|-------------|
+| Active files | Indefinite | User request |
+| Soft-deleted files | 30 days | Automatic |
+| Audit logs | 1 year | Manual purge |
+| Metrics | 90 days | Automatic |
+
+---
+
+## 5. Authentication & Authorization
+
+### Authentication Flow
+
+```
+1. LOGIN
+   ├── User submits email + password
+   ├── Server verifies bcrypt hash
+   ├── Generate JWT (24h expiry)
+   ├── Set HTTP-only cookie
+   └── Return user info + encrypted private key
+
+2. SESSION
+   ├── JWT verified on each request
+   ├── User ID extracted from token
+   ├── Private key cached in browser memory
+   └── No private key sent to server
+
+3. LOGOUT
+   ├── Clear cookie
+   ├── Clear browser memory
+   └── (Future: Invalidate token server-side)
+```
+
+### Authorization Model
+
+| Resource | Owner | Shared User | Public |
+|----------|-------|-------------|--------|
+| View file | ✅ | Conditional | ❌ |
+| Download file | ✅ | canDownload | ❌ |
+| Delete file | ✅ | ❌ | ❌ |
+| Share file | ✅ | canReshare | ❌ |
+| View metadata | ✅ | ✅ | ❌ |
+
+### Attribute-Based Access Control (ABAC)
+
+Files can have policies:
+```
+Policy: "(role:faculty AND dept:CSE) OR (clearance:5)"
+
+User attributes: { role: "faculty", dept: "CSE" }
+Result: ✅ Access granted
+
+User attributes: { role: "student", dept: "CSE" }
+Result: ❌ Access denied
+```
+
+---
+
+## 6. Audit & Compliance
+
+### Audit Log Structure
+
+```json
+{
+  "id": "clx123...",
+  "userId": "user_abc",
+  "fileId": "file_xyz",
+  "action": "FILE_DOWNLOADED",
+  "timestamp": "2026-01-09T10:00:00Z",
+  "ipAddress": "192.168.1.1",
+  "userAgent": "Mozilla/5.0...",
+  "signature": "ECDSA_SIG_...",
+  "previousHash": "SHA256_OF_PREV_ENTRY",
+  "details": {
+    "filename": "secret.pdf",
+    "accessType": "owner"
+  }
+}
+```
+
+### Tamper Detection
+
+Each log entry is:
+1. **Signed**: ECDSA P-384 signature
+2. **Chained**: SHA-256 hash of previous entry
+3. **Verifiable**: Merkle proofs for batch validation
+
+### Compliance Alignment
+
+| Standard | Relevant Controls | Status |
+|----------|-------------------|--------|
+| **GDPR** | Data encryption, right to delete | ✅ Supported |
+| **HIPAA** | Encryption at rest/transit | ✅ Supported |
+| **SOC 2** | Audit logging, access controls | ✅ Supported |
+| **NIST 800-53** | Crypto controls, key management | ✅ Aligned |
+| **PCI DSS** | Strong encryption, key protection | ✅ Aligned |
+
+---
+
+## 7. Incident Response
+
+### Security Event Types
+
+| Event | Severity | Auto-Response |
+|-------|----------|---------------|
+| Failed login (5+ attempts) | Medium | Rate limit |
+| Invalid JWT signature | High | Block request |
+| File integrity failure | Critical | Block download |
+| Unusual download volume | High | Alert |
+| Admin login from new IP | Medium | Alert |
+
+### Response Procedures
+
+#### High Severity
+1. Automatic blocking/rate limiting
+2. Security event logged
+3. Alert to admin (future: email/SMS)
+4. User notification (future)
+
+#### Critical Severity
+1. Immediate request blocking
+2. Session invalidation (future)
+3. Admin notification
+4. Incident ticket creation (future)
+
+---
+
+## 8. Security Best Practices
+
+### For Users
+
+1. **Strong Passwords**
+   - Minimum 12 characters
+   - Mix of letters, numbers, symbols
+   - Unique password for CryptoVault
+
+2. **Key Backup**
+   - Export and secure your Shamir shares
+   - Store in multiple secure locations
+   - Test recovery periodically
+
+3. **Device Security**
+   - Use trusted devices only
+   - Keep browser updated
+   - Log out on shared computers
+
+4. **Share Carefully**
+   - Set expiration on shares
+   - Use minimal permissions (canDownload only)
+   - Revoke unused shares
+
+### For Deployment
+
+1. **Environment Variables**
+   - Never commit secrets to git
+   - Use secret managers (AWS Secrets Manager)
+   - Rotate credentials regularly
+
+2. **Database Security**
+   - Enable TLS for connections
+   - Use strong passwords
+   - Regular backups (encrypted)
+
+3. **AWS Configuration**
+   - Principle of least privilege for IAM
+   - Enable S3 versioning
+   - Enable CloudTrail logging
+
+4. **Monitoring**
+   - Set up security alerts
+   - Monitor audit logs
+   - Regular security reviews
+
+---
+
+## Responsible Disclosure
+
+If you discover a security vulnerability:
+
+1. **Do NOT** disclose publicly
+2. Email: [security email]
+3. Include:
+   - Description of vulnerability
+   - Steps to reproduce
+   - Potential impact
+4. We will respond within 48 hours
+5. We will credit you (if desired) after fix
+
+---
+
+## Security Checklist
+
+### Pre-Deployment
+
+- [ ] All secrets in environment variables
+- [ ] HTTPS configured
+- [ ] Database TLS enabled
+- [ ] AWS IAM least privilege
+- [ ] Rate limiting configured
+- [ ] CORS properly configured
+
+### Regular Audits
+
+- [ ] Weekly: Review security events
+- [ ] Monthly: Check for dependency updates
+- [ ] Quarterly: Penetration testing
+- [ ] Annually: Full security audit
+
+---
+
+*Last Updated: January 2026*
+*Version: 1.0*
+
+
+---
+
+
+# Deployment Guide
+
+
+# 🚀 CryptoVault Enterprise - Deployment Guide
+
+> Deploy CryptoVault to production environments
+
+---
+
+## Table of Contents
+
+1. [Prerequisites](#prerequisites)
+2. [Environment Configuration](#environment-configuration)
+3. [Database Setup](#database-setup)
+4. [AWS Configuration](#aws-configuration)
+5. [Deployment Options](#deployment-options)
+6. [Post-Deployment Checklist](#post-deployment-checklist)
+7. [Monitoring & Maintenance](#monitoring--maintenance)
+
+---
+
+## Prerequisites
+
+### Required Services
+- **PostgreSQL** 14+ database
+- **Node.js** 18.17+ runtime
+- **AWS Account** with S3 and KMS access
+
+### Optional Services
+- **GCP Account** for backup storage
+- **Domain** with SSL certificate
+- **CDN** (CloudFront, Cloudflare)
+
+---
+
+## Environment Configuration
+
+### Production Environment Variables
+
+Create `.env.production` with these variables:
+
+```env
+# ===========================================
+# REQUIRED CONFIGURATION
+# ===========================================
+
+# Database (PostgreSQL)
+DATABASE_URL="postgresql://user:password@host:5432/cryptovault?sslmode=require"
+
+# Authentication
+JWT_SECRET="your-256-bit-secret-key-generate-with-openssl-rand-base64-32"
+
+# ===========================================
+# AWS CONFIGURATION (Required for production)
+# ===========================================
+
+# Region
+AWS_REGION="ap-south-1"
+
+# IAM Credentials (use IAM roles in production if possible)
+AWS_ACCESS_KEY_ID="AKIA..."
+AWS_SECRET_ACCESS_KEY="..."
+
+# S3 Bucket for encrypted files
+AWS_S3_BUCKET="your-production-bucket"
+
+# KMS Key for additional encryption
+AWS_KMS_KEY_ARN="arn:aws:kms:region:account:key/key-id"
+
+# ===========================================
+# OPTIONAL CONFIGURATION
+# ===========================================
+
+# GCP Backup (optional)
+GCP_PROJECT_ID="your-project"
+GCP_BUCKET_NAME="your-backup-bucket"
+GCP_KEYFILE_PATH="/path/to/service-account.json"
+
+# Feature Flags
+ENABLE_POST_QUANTUM="true"
+ENABLE_FHE="false"
+ENABLE_DEMO_MODE="false"
+
+# Performance
+MAX_FILE_SIZE_MB="100"
+UPLOAD_TIMEOUT_MS="300000"
+
+# Security Headers
+CORS_ORIGIN="https://yourdomain.com"
+RATE_LIMIT_REQUESTS="100"
+RATE_LIMIT_WINDOW_MS="60000"
+```
+
+### Generate Secure JWT Secret
+
+```bash
+# Generate a secure 256-bit secret
+openssl rand -base64 32
+
+# Or using Node.js
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+```
+
+---
+
+## Database Setup
+
+### Option 1: AWS RDS (Recommended)
+
+```bash
+# Create PostgreSQL instance via AWS CLI
+aws rds create-db-instance \
+    --db-instance-identifier cryptovault-prod \
+    --db-instance-class db.t3.medium \
+    --engine postgres \
+    --engine-version 14 \
+    --master-username admin \
+    --master-user-password "YOUR_SECURE_PASSWORD" \
+    --allocated-storage 100 \
+    --storage-encrypted \
+    --vpc-security-group-ids sg-xxx \
+    --backup-retention-period 7
+```
+
+### Option 2: Managed PostgreSQL
+
+Supported providers:
+- **Supabase** - Free tier available
+- **PlanetScale** - MySQL (requires adapter)
+- **Neon** - Serverless Postgres
+- **Railway** - Simple deployment
+
+### Database Migration
+
+```bash
+# Generate Prisma client
+npx prisma generate
+
+# Push schema to database
+npx prisma db push
+
+# Or run migrations (recommended for production)
+npx prisma migrate deploy
+```
+
+---
+
+## AWS Configuration
+
+### S3 Bucket Setup
+
+```bash
+# Create bucket
+aws s3 mb s3://cryptovault-prod-files --region ap-south-1
+
+# Enable versioning
+aws s3api put-bucket-versioning \
+    --bucket cryptovault-prod-files \
+    --versioning-configuration Status=Enabled
+
+# Enable encryption
+aws s3api put-bucket-encryption \
+    --bucket cryptovault-prod-files \
+    --server-side-encryption-configuration '{
+        "Rules": [{
+            "ApplyServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "aws:kms",
+                "KMSMasterKeyID": "your-kms-key-id"
+            }
+        }]
+    }'
+
+# Block public access
+aws s3api put-public-access-block \
+    --bucket cryptovault-prod-files \
+    --public-access-block-configuration \
+    "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true"
+```
+
+### KMS Key Setup
+
+```bash
+# Create KMS key
+aws kms create-key \
+    --description "CryptoVault DEK encryption key" \
+    --key-usage ENCRYPT_DECRYPT \
+    --origin AWS_KMS
+
+# Create alias
+aws kms create-alias \
+    --alias-name alias/cryptovault-prod \
+    --target-key-id "key-id-from-above"
+```
+
+### IAM Policy (Least Privilege)
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:DeleteObject",
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::cryptovault-prod-files",
+                "arn:aws:s3:::cryptovault-prod-files/*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "kms:Encrypt",
+                "kms:Decrypt",
+                "kms:GenerateDataKey"
+            ],
+            "Resource": "arn:aws:kms:region:account:key/key-id"
+        }
+    ]
+}
+```
+
+---
+
+## Deployment Options
+
+### Option 1: Vercel (Recommended)
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Login
+vercel login
+
+# Deploy
+vercel --prod
+
+# Set environment variables
+vercel env add DATABASE_URL production
+vercel env add JWT_SECRET production
+vercel env add AWS_ACCESS_KEY_ID production
+# ... add all required variables
+```
+
+**Vercel Configuration** (`vercel.json`):
+```json
+{
+    "framework": "nextjs",
+    "regions": ["bom1"],
+    "functions": {
+        "app/api/**/*.ts": {
+            "maxDuration": 30
+        }
+    }
+}
+```
+
+### Option 2: AWS (EC2 + Docker)
+
+**Dockerfile**:
+```dockerfile
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npx prisma generate
+RUN npm run build
+
+FROM node:18-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
+EXPOSE 3000
+CMD ["node", "server.js"]
+```
+
+```bash
+# Build and push to ECR
+docker build -t cryptovault .
+docker tag cryptovault:latest $ECR_REPO:latest
+docker push $ECR_REPO:latest
+
+# Deploy to EC2
+ssh ec2-user@your-instance
+docker pull $ECR_REPO:latest
+docker run -d -p 3000:3000 --env-file .env.production cryptovault
+```
+
+### Option 3: Docker Compose
+
+```yaml
+# docker-compose.yml
+version: '3.8'
+
+services:
+    app:
+        build: .
+        ports:
+            - "3000:3000"
+        environment:
+            - DATABASE_URL=postgresql://postgres:password@db:5432/cryptovault
+            - JWT_SECRET=${JWT_SECRET}
+            - AWS_REGION=${AWS_REGION}
+            - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+            - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+            - AWS_S3_BUCKET=${AWS_S3_BUCKET}
+        depends_on:
+            - db
+
+    db:
+        image: postgres:14-alpine
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=password
+            - POSTGRES_DB=cryptovault
+
+volumes:
+    postgres_data:
+```
+
+```bash
+docker-compose up -d
+```
+
+### Option 4: Railway
+
+```bash
+# Install Railway CLI
+npm i -g @railway/cli
+
+# Login
+railway login
+
+# Initialize project
+railway init
+
+# Deploy
+railway up
+
+# Add PostgreSQL
+railway add --plugin postgresql
+```
+
+---
+
+## Post-Deployment Checklist
+
+### Security
+
+- [ ] HTTPS enabled (SSL certificate)
+- [ ] HSTS header configured
+- [ ] CORS restricted to your domain
+- [ ] Rate limiting enabled
+- [ ] CSP headers configured
+- [ ] Database connection uses SSL
+
+### Environment
+
+- [ ] All environment variables set
+- [ ] JWT_SECRET is unique and secure
+- [ ] AWS credentials are IAM roles (not hardcoded)
+- [ ] Demo mode disabled (`ENABLE_DEMO_MODE=false`)
+
+### Database
+
+- [ ] Migrations applied
+- [ ] Backups configured
+- [ ] Connection pooling enabled
+- [ ] Indices created
+
+### Monitoring
+
+- [ ] Error tracking (Sentry, etc.)
+- [ ] Logging configured
+- [ ] Uptime monitoring
+- [ ] Performance metrics
+
+### Testing
+
+- [ ] Upload/download works
+- [ ] Authentication works
+- [ ] File sharing works
+- [ ] Audit logs recording
+
+---
+
+## Monitoring & Maintenance
+
+### Health Check Endpoint
+
+Add a health check route:
+
+```typescript
+// app/api/health/route.ts
+export async function GET() {
+    return Response.json({
+        status: 'healthy',
+        timestamp: new Date().toISOString(),
+        version: '1.0.0'
+    });
+}
+```
+
+### Recommended Monitoring
+
+| Service | Purpose |
+|---------|---------|
+| **AWS CloudWatch** | Logs, metrics |
+| **Sentry** | Error tracking |
+| **UptimeRobot** | Uptime monitoring |
+| **Datadog** | APM, logs |
+
+### Backup Strategy
+
+```bash
+# Daily database backup
+pg_dump $DATABASE_URL | gzip > backup-$(date +%Y%m%d).sql.gz
+
+# Upload to S3
+aws s3 cp backup-*.sql.gz s3://cryptovault-backups/
+```
+
+### Log Rotation
+
+Configure log rotation to prevent disk space issues:
+
+```bash
+# /etc/logrotate.d/cryptovault
+/var/log/cryptovault/*.log {
+    daily
+    rotate 14
+    compress
+    delaycompress
+    notifempty
+    create 0640 www-data www-data
+}
+```
+
+---
+
+## Troubleshooting
+
+### Database Connection Failed
+
+```bash
+# Test connection
+psql $DATABASE_URL -c "SELECT 1"
+
+# Check firewall rules
+# Ensure security group allows inbound on 5432
+```
+
+### S3 Upload Failed
+
+```bash
+# Test S3 access
+aws s3 ls s3://your-bucket/
+
+# Check IAM permissions
+aws sts get-caller-identity
+```
+
+### High Memory Usage
+
+```bash
+# Increase Node.js memory limit
+NODE_OPTIONS="--max-old-space-size=4096" npm start
+```
+
+---
+
+*See [QUICKSTART.md](./QUICKSTART.md) for development setup*
+
+
+---
+
+
+# API Testing Guide
+
+
+# 🧪 CryptoVault Enterprise - API Testing Guide
+
+> Test API endpoints using curl, Postman, or any HTTP client
+
+---
+
+## Table of Contents
+
+1. [Base URL & Headers](#base-url--headers)
+2. [Authentication](#authentication)
+3. [File Operations](#file-operations)
+4. [Sharing](#sharing)
+5. [Audit & Metrics](#audit--metrics)
+6. [Complete Workflow Example](#complete-workflow-example)
+
+---
+
+## Base URL & Headers
+
+### Development
+```
+Base URL: http://localhost:3000/api
+```
+
+### Production
+```
+Base URL: https://yourdomain.com/api
+```
+
+### Required Headers
+
+```bash
+# Content-Type for JSON requests
+Content-Type: application/json
+
+# Authentication cookie is sent automatically
+# Or manually include:
+Cookie: auth-token=<your-jwt-token>
+```
+
+---
+
+## Authentication
+
+### Register New User
+
+```bash
+curl -X POST http://localhost:3000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "SecurePassword123!"
+  }'
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "user": {
+    "id": "clx123...",
+    "email": "user@example.com",
+    "publicKey": "-----BEGIN PUBLIC KEY-----\n...",
+    "createdAt": "2026-01-09T10:00:00.000Z"
+  },
+  "encryptedPrivateKey": "base64-encrypted-private-key..."
+}
+```
+
+### Login
+
+```bash
+curl -X POST http://localhost:3000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -c cookies.txt \
+  -d '{
+    "email": "user@example.com",
+    "password": "SecurePassword123!"
+  }'
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "user": {
+    "id": "clx123...",
+    "email": "user@example.com",
+    "publicKey": "-----BEGIN PUBLIC KEY-----\n..."
+  },
+  "encryptedPrivateKey": "base64-encrypted-private-key..."
+}
+```
+
+**Note:** The JWT token is set as an HTTP-only cookie automatically.
+
+### Get Current User
+
+```bash
+curl -X GET http://localhost:3000/api/auth/me \
+  -b cookies.txt
+```
+
+**Response:**
+```json
+{
+  "user": {
+    "id": "clx123...",
+    "email": "user@example.com",
+    "publicKey": "-----BEGIN PUBLIC KEY-----\n...",
+    "ecdsaPublicKey": "base64-ecdsa-key...",
+    "createdAt": "2026-01-09T10:00:00.000Z"
+  }
+}
+```
+
+### Logout
+
+```bash
+curl -X POST http://localhost:3000/api/auth/logout \
+  -b cookies.txt
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Logged out successfully"
+}
+```
+
+---
+
+## File Operations
+
+### Upload Encrypted File
+
+**Note:** Files should be encrypted client-side before upload. This example assumes you have pre-encrypted data.
+
+```bash
+curl -X POST http://localhost:3000/api/files/upload \
+  -b cookies.txt \
+  -F "encryptedData=@encrypted-file.bin;type=application/octet-stream" \
+  -F 'metadata={"originalName":"document.pdf","mimeType":"application/pdf","size":1024000}' \
+  -F 'crypto={"encryptedDEK":"base64-wrapped-dek...","iv":"base64-iv...","authTag":"base64-tag...","hmac":"base64-hmac...","algorithm":"AES-256-GCM","keyWrapAlgorithm":"RSA-OAEP-4096"}'
+```
+
+**Alternative: Base64 encoded data**
+
+```bash
+curl -X POST http://localhost:3000/api/files/upload \
+  -b cookies.txt \
+  -H "Content-Type: multipart/form-data" \
+  -F "encryptedData=BASE64_ENCODED_CIPHERTEXT" \
+  -F 'metadata={"originalName":"test.txt","mimeType":"text/plain","size":100}' \
+  -F 'crypto={
+    "encryptedDEK": "RSA_WRAPPED_DEK_BASE64",
+    "rawDEK": "RAW_DEK_BASE64_FOR_DEMO",
+    "iv": "IV_BASE64",
+    "authTag": "AUTH_TAG_BASE64",
+    "hmac": "HMAC_SIGNATURE_BASE64",
+    "algorithm": "AES-256-GCM",
+    "keyWrapAlgorithm": "RSA-OAEP-4096"
+  }'
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "file": {
+    "id": "clxfile123...",
+    "name": "document.pdf",
+    "size": 1024000,
+    "encryptedSize": 1024600,
+    "uploadedAt": "2026-01-09T10:00:00.000Z",
+    "storageProvider": "AWS_S3",
+    "hasBackup": false,
+    "encryptionLayers": [
+      "AES-256-GCM (client-side)",
+      "RSA-4096-OAEP (key wrapping)",
+      "AWS KMS (server-side)",
+      "S3 SSE (at rest)"
+    ]
+  },
+  "metrics": {
+    "uploadDuration": 1234,
+    "throughput": "0.83 MB"
+  }
+}
+```
+
+### Download Encrypted File
+
+```bash
+curl -X GET "http://localhost:3000/api/files/download?fileId=clxfile123..." \
+  -b cookies.txt
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "encryptedData": "BASE64_ENCODED_CIPHERTEXT...",
+  "crypto": {
+    "encryptedDEK": "RSA_WRAPPED_DEK_BASE64...",
+    "iv": "IV_BASE64...",
+    "authTag": "AUTH_TAG_BASE64...",
+    "hmacSignature": "HMAC_BASE64...",
+    "algorithm": "AES-256-GCM"
+  },
+  "metadata": {
+    "filename": "document.pdf",
+    "mimeType": "application/pdf",
+    "size": 1024000
+  }
+}
+```
+
+### List User's Files
+
+```bash
+curl -X GET http://localhost:3000/api/files/list \
+  -b cookies.txt
+```
+
+**Response:**
+```json
+{
+  "files": [
+    {
+      "id": "clxfile123...",
+      "originalFilename": "document.pdf",
+      "mimeType": "application/pdf",
+      "fileSize": 1024000,
+      "encryptedFileSize": 1024600,
+      "storageProvider": "AWS_S3",
+      "uploadedAt": "2026-01-09T10:00:00.000Z",
+      "lastAccessedAt": "2026-01-09T11:00:00.000Z"
+    },
+    {
+      "id": "clxfile456...",
+      "originalFilename": "image.png",
+      "mimeType": "image/png",
+      "fileSize": 2048000,
+      "uploadedAt": "2026-01-08T10:00:00.000Z"
+    }
+  ],
+  "total": 2
+}
+```
+
+### Delete File (Soft Delete)
+
+```bash
+curl -X DELETE http://localhost:3000/api/files/delete \
+  -b cookies.txt \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fileId": "clxfile123..."
+  }'
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "File deleted successfully"
+}
+```
+
+---
+
+## Sharing
+
+### Create Share
+
+```bash
+curl -X POST http://localhost:3000/api/share/create \
+  -b cookies.txt \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fileId": "clxfile123...",
+    "sharedWithEmail": "recipient@example.com",
+    "canDownload": true,
+    "canReshare": false,
+    "expiresAt": "2026-02-09T00:00:00.000Z",
+    "reEncryptionKey": "PROXY_RE_ENCRYPTION_KEY_BASE64..."
+  }'
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "share": {
+    "id": "clxshare123...",
+    "fileId": "clxfile123...",
+    "sharedWithUserId": "clxuser456...",
+    "canDownload": true,
+    "canReshare": false,
+    "expiresAt": "2026-02-09T00:00:00.000Z",
+    "sharedAt": "2026-01-09T10:00:00.000Z"
+  }
+}
+```
+
+### Revoke Share
+
+```bash
+curl -X POST http://localhost:3000/api/share/revoke \
+  -b cookies.txt \
+  -H "Content-Type: application/json" \
+  -d '{
+    "shareId": "clxshare123..."
+  }'
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Share revoked successfully"
+}
+```
+
+### List Shares for a File
+
+```bash
+curl -X GET "http://localhost:3000/api/share/list?fileId=clxfile123..." \
+  -b cookies.txt
+```
+
+**Response:**
+```json
+{
+  "shares": [
+    {
+      "id": "clxshare123...",
+      "sharedWithUser": {
+        "email": "recipient@example.com"
+      },
+      "canDownload": true,
+      "canReshare": false,
+      "expiresAt": "2026-02-09T00:00:00.000Z",
+      "sharedAt": "2026-01-09T10:00:00.000Z"
+    }
+  ]
+}
+```
+
+---
+
+## Audit & Metrics
+
+### Get Audit Logs
+
+```bash
+curl -X GET "http://localhost:3000/api/audit?limit=10&offset=0" \
+  -b cookies.txt
+```
+
+**Response:**
+```json
+{
+  "logs": [
+    {
+      "id": "clxaudit123...",
+      "action": "FILE_UPLOADED",
+      "fileId": "clxfile123...",
+      "timestamp": "2026-01-09T10:00:00.000Z",
+      "details": {
+        "filename": "document.pdf",
+        "size": 1024000,
+        "algorithm": "AES-256-GCM"
+      },
+      "signature": "ECDSA_SIGNATURE_BASE64...",
+      "previousHash": "SHA256_OF_PREVIOUS_ENTRY..."
+    },
+    {
+      "id": "clxaudit124...",
+      "action": "FILE_DOWNLOADED",
+      "fileId": "clxfile123...",
+      "timestamp": "2026-01-09T11:00:00.000Z",
+      "details": {
+        "filename": "document.pdf",
+        "accessType": "owner"
+      }
+    }
+  ],
+  "total": 25
+}
+```
+
+### Get Encryption Metrics
+
+```bash
+curl -X GET http://localhost:3000/api/metrics \
+  -b cookies.txt
+```
+
+**Response:**
+```json
+{
+  "metrics": {
+    "totalOperations": 150,
+    "averageDurationMs": 245,
+    "totalBytesProcessed": 1073741824,
+    "averageThroughputMBps": 4.2,
+    "errorRate": 0.01,
+    "byAlgorithm": {
+      "AES-256-GCM": {
+        "count": 100,
+        "avgDurationMs": 200
+      },
+      "RSA-4096-OAEP": {
+        "count": 50,
+        "avgDurationMs": 300
+      }
+    }
+  },
+  "period": {
+    "start": "2026-01-01T00:00:00.000Z",
+    "end": "2026-01-09T23:59:59.000Z"
+  }
+}
+```
+
+---
+
+## Complete Workflow Example
+
+### Full Upload/Download Flow with Bash
+
+```bash
+#!/bin/bash
+
+BASE_URL="http://localhost:3000/api"
+COOKIE_FILE="cookies.txt"
+
+# 1. Register
+echo "=== Registering user ==="
+curl -s -X POST "$BASE_URL/auth/register" \
+  -H "Content-Type: application/json" \
+  -c $COOKIE_FILE \
+  -d '{
+    "email": "test@example.com",
+    "password": "TestPass123!"
+  }' | jq .
+
+# 2. Login
+echo "=== Logging in ==="
+curl -s -X POST "$BASE_URL/auth/login" \
+  -H "Content-Type: application/json" \
+  -c $COOKIE_FILE \
+  -d '{
+    "email": "test@example.com",
+    "password": "TestPass123!"
+  }' | jq .
+
+# 3. Get current user
+echo "=== Getting current user ==="
+curl -s -X GET "$BASE_URL/auth/me" \
+  -b $COOKIE_FILE | jq .
+
+# 4. Upload file (with mock encrypted data)
+echo "=== Uploading file ==="
+UPLOAD_RESPONSE=$(curl -s -X POST "$BASE_URL/files/upload" \
+  -b $COOKIE_FILE \
+  -F "encryptedData=SGVsbG8gV29ybGQh" \
+  -F 'metadata={"originalName":"test.txt","mimeType":"text/plain","size":12}' \
+  -F 'crypto={"rawDEK":"dGVzdGtleQ==","iv":"dGVzdGl2MTIz","authTag":"dGVzdHRhZw==","algorithm":"AES-256-GCM"}')
+
+echo $UPLOAD_RESPONSE | jq .
+
+FILE_ID=$(echo $UPLOAD_RESPONSE | jq -r '.file.id')
+echo "File ID: $FILE_ID"
+
+# 5. List files
+echo "=== Listing files ==="
+curl -s -X GET "$BASE_URL/files/list" \
+  -b $COOKIE_FILE | jq .
+
+# 6. Download file
+echo "=== Downloading file ==="
+curl -s -X GET "$BASE_URL/files/download?fileId=$FILE_ID" \
+  -b $COOKIE_FILE | jq .
+
+# 7. Get audit logs
+echo "=== Getting audit logs ==="
+curl -s -X GET "$BASE_URL/audit?limit=5" \
+  -b $COOKIE_FILE | jq .
+
+# 8. Logout
+echo "=== Logging out ==="
+curl -s -X POST "$BASE_URL/auth/logout" \
+  -b $COOKIE_FILE | jq .
+
+# Cleanup
+rm -f $COOKIE_FILE
+```
+
+---
+
+## Error Responses
+
+### 401 Unauthorized
+
+```json
+{
+  "error": "Unauthorized",
+  "message": "Authentication required"
+}
+```
+
+### 403 Forbidden
+
+```json
+{
+  "error": "Access denied",
+  "message": "You don't have permission to access this resource"
+}
+```
+
+### 404 Not Found
+
+```json
+{
+  "error": "File not found",
+  "message": "The requested file does not exist"
+}
+```
+
+### 500 Internal Server Error
+
+```json
+{
+  "error": "Upload failed",
+  "details": "S3 bucket not configured"
+}
+```
+
+---
+
+## Postman Collection
+
+Import this into Postman for easy testing:
+
+```json
+{
+  "info": {
+    "name": "CryptoVault API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\":\"test@example.com\",\"password\":\"Test123!\"}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\":\"test@example.com\",\"password\":\"Test123!\"}"
+            }
+          }
+        },
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/auth/me"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/logout"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Files",
+      "item": [
+        {
+          "name": "List",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/files/list"
+          }
+        },
+        {
+          "name": "Download",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/files/download?fileId={{fileId}}"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+---
+
+*See [TECHNICAL_DOCS.md](./TECHNICAL_DOCS.md) for complete API documentation*
+
+
+---
+
+
+# Code Examples
+
+
+# 💻 CryptoVault Enterprise - Code Examples
+
+> Ready-to-use code snippets for common cryptographic operations
+
+---
+
+## Table of Contents
+
+1. [AES-256-GCM Encryption](#1-aes-256-gcm-encryption)
+2. [RSA-4096 Key Wrapping](#2-rsa-4096-key-wrapping)
+3. [Envelope Encryption](#3-envelope-encryption)
+4. [Digital Signatures (ECDSA)](#4-digital-signatures-ecdsa)
+5. [Hashing with SHA-256](#5-hashing-with-sha-256)
+6. [HMAC for Integrity](#6-hmac-for-integrity)
+7. [Diffie-Hellman Key Exchange](#7-diffie-hellman-key-exchange)
+8. [Schnorr Zero-Knowledge Proof](#8-schnorr-zero-knowledge-proof)
+9. [Shamir's Secret Sharing](#9-shamirs-secret-sharing)
+10. [Merkle Tree Verification](#10-merkle-tree-verification)
+
+---
+
+## 1. AES-256-GCM Encryption
+
+### Encrypt a String
+
+```typescript
+import { encryptAES, decryptAES, generateAESKey } from '@/lib/crypto/aes';
+
+// Generate a new AES key
+const key = await generateAESKey();
+
+// Encrypt data
+const plaintext = 'Hello, CryptoVault!';
+const encrypted = await encryptAES(plaintext, key);
+
+console.log('Ciphertext:', encrypted.ciphertext);  // Base64
+console.log('IV:', encrypted.iv);                   // Base64
+console.log('Auth Tag:', encrypted.authTag);        // Base64
+console.log('Algorithm:', encrypted.algorithm);     // 'AES-256-GCM'
+
+// Decrypt data
+const decrypted = await decryptAES({
+    ciphertext: encrypted.ciphertext,
+    iv: encrypted.iv,
+    authTag: encrypted.authTag,
+    key: key
+});
+
+console.log('Decrypted:', decrypted);  // 'Hello, CryptoVault!'
+```
+
+### Encrypt a File
+
+```typescript
+import { encryptFileBuffer } from '@/lib/crypto/aes';
+
+// Read file as ArrayBuffer
+const file = document.getElementById('fileInput').files[0];
+const arrayBuffer = await file.arrayBuffer();
+
+// Encrypt the file
+const result = await encryptFileBuffer(arrayBuffer);
+
+console.log('Encrypted size:', result.ciphertext.length);
+console.log('Key (keep safe!):', await exportAESKey(result.key));
+```
+
+---
+
+## 2. RSA-4096 Key Wrapping
+
+### Generate Key Pair
+
+```typescript
+import { 
+    generateRSAKeyPair, 
+    exportRSAKeyPair,
+    encryptRSA,
+    decryptRSA 
+} from '@/lib/crypto/rsa';
+
+// Generate 4096-bit RSA key pair
+const keyPair = await generateRSAKeyPair();
+
+// Export to PEM format for storage
+const exported = await exportRSAKeyPair(keyPair);
+console.log('Public Key:\n', exported.publicKey);
+console.log('Private Key:\n', exported.privateKey);
+```
+
+### Wrap/Unwrap a DEK
+
+```typescript
+// Encrypt (wrap) a Data Encryption Key
+const dek = 'base64EncodedAESKey...';
+const wrapped = await encryptRSA(dek, keyPair.publicKey);
+
+console.log('Wrapped DEK:', wrapped.ciphertext);
+
+// Decrypt (unwrap) the DEK
+const unwrapped = await decryptRSA(wrapped.ciphertext, keyPair.privateKey);
+console.log('Unwrapped DEK:', unwrapped);  // Original DEK
+```
+
+---
+
+## 3. Envelope Encryption
+
+### Encrypt File with Envelope Pattern
+
+```typescript
+import { 
+    envelopeEncrypt, 
+    envelopeDecrypt,
+    envelopeEncryptFile 
+} from '@/lib/crypto/envelope-encryption';
+import { importRSAPublicKey, importRSAPrivateKey } from '@/lib/crypto/rsa';
+
+// Get user's public key (from database or session)
+const publicKey = await importRSAPublicKey(userPublicKeyPEM);
+
+// Encrypt data with envelope pattern
+const result = await envelopeEncrypt('Sensitive data here', publicKey);
+
+console.log('Ciphertext:', result.ciphertext);
+console.log('Wrapped DEK:', result.encryptedDEK);
+console.log('IV:', result.iv);
+console.log('HMAC:', result.hmac);
+
+// To decrypt (requires private key)
+const privateKey = await importRSAPrivateKey(userPrivateKeyPEM);
+const decrypted = await envelopeDecrypt(result, privateKey);
+console.log('Decrypted:', decrypted);
+```
+
+### Encrypt File with Progress
+
+```typescript
+// For large files with progress callback
+const file = document.getElementById('fileInput').files[0];
+
+const result = await envelopeEncryptFile(
+    file,
+    publicKey,
+    (progress) => {
+        console.log(`Encryption progress: ${progress}%`);
+        updateProgressBar(progress);
+    }
+);
+
+console.log('File encrypted successfully');
+console.log('Original size:', result.fileMetadata.originalSize);
+console.log('Encrypted size:', result.ciphertext.length);
+```
+
+---
+
+## 4. Digital Signatures (ECDSA)
+
+### Sign and Verify Data
+
+```typescript
+import {
+    generateECDSAKeyPair,
+    signECDSA,
+    verifyECDSA,
+    signJSON,
+    verifyJSON
+} from '@/lib/crypto/ecdsa';
+
+// Generate ECDSA P-384 key pair
+const keyPair = await generateECDSAKeyPair();
+
+// Sign a string
+const message = 'Important document';
+const signature = await signECDSA(message, keyPair.privateKey);
+
+console.log('Signature:', signature);  // Base64
+
+// Verify signature
+const isValid = await verifyECDSA(message, signature, keyPair.publicKey);
+console.log('Valid:', isValid);  // true
+
+// Sign a JSON object (great for audit logs)
+const auditEntry = {
+    action: 'FILE_UPLOADED',
+    userId: 'user123',
+    timestamp: new Date().toISOString()
+};
+
+const jsonSignature = await signJSON(auditEntry, keyPair.privateKey);
+const isJsonValid = await verifyJSON(auditEntry, jsonSignature, keyPair.publicKey);
+console.log('Valid JSON signature:', isJsonValid);
+```
+
+---
+
+## 5. Hashing with SHA-256
+
+### Hash Data
+
+```typescript
+import { sha256, sha512 } from '@/lib/crypto/sha';
+
+// SHA-256 hash
+const hash256 = await sha256('Hello, World!');
+console.log('SHA-256:', hash256);
+// Output: dffd6021bb2bd5b0af676290809ec3a53191dd81c7f70a4b28688a362182986f
+
+// SHA-512 hash
+const hash512 = await sha512('Hello, World!');
+console.log('SHA-512:', hash512);
+```
+
+### Hash a File
+
+```typescript
+// Hash file contents
+const file = document.getElementById('fileInput').files[0];
+const arrayBuffer = await file.arrayBuffer();
+const fileHash = await sha256(new Uint8Array(arrayBuffer));
+
+console.log('File hash:', fileHash);
+```
+
+---
+
+## 6. HMAC for Integrity
+
+### Create and Verify HMAC
+
+```typescript
+import { generateHMACKey, signHMAC, verifyHMAC } from '@/lib/crypto/hmac';
+
+// Generate HMAC key
+const hmacKey = await generateHMACKey();
+
+// Sign message
+const message = 'Protected data';
+const hmac = await signHMAC(message, hmacKey);
+
+console.log('HMAC:', hmac);  // Base64
+
+// Verify (returns true if message is unchanged)
+const isValid = await verifyHMAC(message, hmac, hmacKey);
+console.log('Valid:', isValid);  // true
+
+// Tampered message fails verification
+const isValidTampered = await verifyHMAC('Tampered data', hmac, hmacKey);
+console.log('Tampered valid:', isValidTampered);  // false
+```
+
+---
+
+## 7. Diffie-Hellman Key Exchange
+
+### Establish Shared Secret
+
+```typescript
+import {
+    generateDHKeyPair,
+    computeSharedSecret,
+    deriveKeyFromDH,
+    DH_GROUP_14
+} from '@/lib/crypto/diffie-hellman';
+
+// Alice generates her key pair
+const aliceKeys = await generateDHKeyPair(DH_GROUP_14);
+
+// Bob generates his key pair
+const bobKeys = await generateDHKeyPair(DH_GROUP_14);
+
+// Alice computes shared secret using Bob's public key
+const aliceSharedSecret = computeSharedSecret(
+    bobKeys.publicKey,
+    aliceKeys.privateKey,
+    DH_GROUP_14
+);
+
+// Bob computes shared secret using Alice's public key
+const bobSharedSecret = computeSharedSecret(
+    aliceKeys.publicKey,
+    bobKeys.privateKey,
+    DH_GROUP_14
+);
+
+// Both secrets are identical!
+console.log('Match:', aliceSharedSecret === bobSharedSecret);  // true
+
+// Derive AES key from shared secret
+const aesKey = await deriveKeyFromDH(aliceSharedSecret);
+// Now Alice and Bob can communicate securely using this key
+```
+
+---
+
+## 8. Schnorr Zero-Knowledge Proof
+
+### Prove Knowledge Without Revealing Secret
+
+```typescript
+import {
+    generateSchnorrKeyPair,
+    createCommitment,
+    generateChallenge,
+    createResponse,
+    verifySchnorrProof
+} from '@/lib/crypto/zkp/schnorr';
+
+// Prover (Alice) generates key pair
+const aliceKeys = generateSchnorrKeyPair();
+
+// Alice: Create commitment (random nonce)
+const commitment = createCommitment();
+console.log('Commitment (v):', commitment.commitment);
+
+// Verifier (Bob): Generate challenge
+const challenge = generateChallenge(
+    commitment.commitment,
+    aliceKeys.publicKey,
+    'authentication'
+);
+console.log('Challenge (c):', challenge);
+
+// Alice: Create response
+const proof = createResponse(
+    commitment.nonce,
+    challenge,
+    aliceKeys.privateKey
+);
+console.log('Response (s):', proof.s);
+
+// Bob: Verify proof
+const isValid = verifySchnorrProof(
+    proof,
+    challenge,
+    aliceKeys.publicKey
+);
+
+console.log('Proof valid:', isValid);  // true
+// Alice proved she knows the private key without revealing it!
+```
+
+---
+
+## 9. Shamir's Secret Sharing
+
+### Split and Reconstruct Secret
+
+```typescript
+import {
+    splitSecret,
+    reconstructSecret,
+    serializeShare,
+    deserializeShare
+} from '@/lib/crypto/mpc/shamir';
+
+// Split a secret into 5 shares, requiring 3 to reconstruct
+const secret = 'MySecretEncryptionKey';
+const shares = splitSecret(secret, 5, 3);
+
+console.log('Created 5 shares:');
+shares.forEach((share, i) => {
+    console.log(`  Share ${i + 1}:`, serializeShare(share));
+});
+
+// Reconstruct using any 3 shares
+const recoveryShares = [shares[0], shares[2], shares[4]];  // Shares 1, 3, 5
+const recovered = reconstructSecret(recoveryShares);
+
+console.log('Recovered secret:', recovered);  // 'MySecretEncryptionKey'
+
+// Less than 3 shares reveals nothing!
+try {
+    reconstructSecret([shares[0], shares[1]]);  // Only 2 shares
+} catch (e) {
+    console.log('Cannot reconstruct with only 2 shares');
+}
+```
+
+---
+
+## 10. Merkle Tree Verification
+
+### Build Tree and Verify Data
+
+```typescript
+import {
+    buildMerkleTree,
+    generateMerkleProof,
+    verifyMerkleProof
+} from '@/lib/crypto/hashing';
+
+// Build Merkle tree from file chunks
+const chunks = ['chunk1data', 'chunk2data', 'chunk3data', 'chunk4data'];
+const tree = await buildMerkleTree(chunks);
+
+console.log('Merkle Root:', tree.root);
+console.log('Leaves:', tree.leaves);
+
+// Generate proof for chunk 2 (index 1)
+const proof = await generateMerkleProof(tree, 1);
+
+console.log('Proof for chunk 2:', proof);
+
+// Verify the proof
+const isValid = await verifyMerkleProof(proof);
+console.log('Chunk verified:', isValid);  // true
+
+// If any chunk is modified, verification fails
+proof.leaf = 'tampereddata';
+const tamperedValid = await verifyMerkleProof(proof);
+console.log('Tampered chunk valid:', tamperedValid);  // false
+```
+
+---
+
+## Complete File Upload Example
+
+```typescript
+import { envelopeEncryptFile } from '@/lib/crypto/envelope-encryption';
+import { importRSAPublicKey } from '@/lib/crypto/rsa';
+import { buildMerkleTree } from '@/lib/crypto/hashing';
+
+async function uploadFile(file: File, userPublicKeyPEM: string) {
+    // 1. Import user's public key
+    const publicKey = await importRSAPublicKey(userPublicKeyPEM);
+    
+    // 2. Encrypt file with envelope encryption
+    const encrypted = await envelopeEncryptFile(
+        file,
+        publicKey,
+        (progress) => console.log(`Encrypting: ${progress}%`)
+    );
+    
+    // 3. Build Merkle tree for integrity
+    const chunks = splitIntoChunks(encrypted.ciphertext, 1024 * 1024); // 1MB chunks
+    const merkleTree = await buildMerkleTree(chunks);
+    
+    // 4. Prepare upload payload
+    const payload = {
+        encryptedData: encrypted.ciphertext,
+        metadata: {
+            originalName: file.name,
+            mimeType: file.type,
+            size: file.size
+        },
+        crypto: {
+            encryptedDEK: encrypted.encryptedDEK,
+            iv: encrypted.iv,
+            authTag: encrypted.authTag,
+            hmac: encrypted.hmac,
+            merkleRoot: merkleTree.root,
+            algorithm: 'AES-256-GCM',
+            keyWrapAlgorithm: 'RSA-OAEP-4096'
+        }
+    };
+    
+    // 5. Upload to server
+    const response = await fetch('/api/files/upload', {
+        method: 'POST',
+        body: createFormData(payload)
+    });
+    
+    return await response.json();
+}
+```
+
+---
+
+## Complete File Download Example
+
+```typescript
+import { envelopeDecrypt } from '@/lib/crypto/envelope-encryption';
+import { importRSAPrivateKey } from '@/lib/crypto/rsa';
+import { signHMAC, verifyHMAC } from '@/lib/crypto/hmac';
+
+async function downloadFile(fileId: string, userPrivateKeyPEM: string) {
+    // 1. Fetch encrypted file from server
+    const response = await fetch(`/api/files/download?fileId=${fileId}`);
+    const data = await response.json();
+    
+    // 2. Verify HMAC integrity
+    // (In production, use the stored HMAC key)
+    if (data.crypto.hmacSignature) {
+        console.log('Verifying integrity...');
+        // HMAC verification would happen here
+    }
+    
+    // 3. Import private key
+    const privateKey = await importRSAPrivateKey(userPrivateKeyPEM);
+    
+    // 4. Decrypt using envelope decryption
+    const decrypted = await envelopeDecrypt({
+        ciphertext: data.encryptedData,
+        encryptedDEK: data.crypto.encryptedDEK,
+        iv: data.crypto.iv,
+        authTag: data.crypto.authTag,
+        hmac: data.crypto.hmacSignature
+    }, privateKey);
+    
+    // 5. Convert to Blob and download
+    const blob = new Blob([decrypted], { type: data.metadata.mimeType });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = data.metadata.filename;
+    a.click();
+    
+    URL.revokeObjectURL(url);
+    
+    return decrypted;
+}
+```
+
+---
+
+## Error Handling Best Practices
+
+```typescript
+import { encryptAES, decryptAES } from '@/lib/crypto/aes';
+
+async function safeEncrypt(data: string) {
+    try {
+        const result = await encryptAES(data);
+        return { success: true, data: result };
+    } catch (error) {
+        if (error instanceof DOMException) {
+            // Web Crypto API error
+            console.error('Crypto operation failed:', error.message);
+            return { success: false, error: 'Encryption failed' };
+        }
+        throw error;
+    }
+}
+
+async function safeDecrypt(params: DecryptParams) {
+    try {
+        const result = await decryptAES(params);
+        return { success: true, data: result };
+    } catch (error) {
+        if (error.message.includes('tag')) {
+            // Authentication tag mismatch - tampering detected
+            console.error('Data integrity check failed!');
+            return { success: false, error: 'File may be corrupted or tampered' };
+        }
+        if (error.message.includes('key')) {
+            // Wrong key
+            return { success: false, error: 'Invalid decryption key' };
+        }
+        throw error;
+    }
+}
+```
+
+---
+
+*See [TECHNICAL_DOCS.md](./TECHNICAL_DOCS.md) for complete API documentation*
+
+
+---
+
+
+# System Diagrams
+
+
+# 📊 CryptoVault Enterprise - Visual Diagrams
+
+> Mermaid diagrams for documentation and presentations
+> These can be rendered in GitHub, VS Code, or exported as images
+
+---
+
+## 1. System Architecture
+
+```mermaid
+flowchart TB
+    subgraph Client["🖥️ Client Browser"]
+        A[User File] --> B[AES-256-GCM Encryption]
+        B --> C[RSA-4096 Key Wrapping]
+        C --> D[HMAC Generation]
+    end
+    
+    subgraph Server["🖧 Next.js Server"]
+        E[API Routes]
+        F[Prisma ORM]
+        G[JWT Auth]
+    end
+    
+    subgraph Cloud["☁️ Cloud Infrastructure"]
+        H[(AWS S3)]
+        I[AWS KMS]
+        J[(PostgreSQL)]
+    end
+    
+    D --> E
+    E --> H
+    E --> I
+    F --> J
+    G --> E
+```
+
+---
+
+## 2. Encryption Flow - File Upload
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant B as Browser
+    participant S as Server
+    participant S3 as AWS S3
+    participant KMS as AWS KMS
+
+    U->>B: Select file to upload
+    B->>B: Generate DEK (AES-256)
+    B->>B: Generate random IV
+    B->>B: Encrypt file with AES-256-GCM
+    B->>B: Wrap DEK with RSA-4096
+    B->>B: Generate HMAC-SHA512
+    B->>S: POST /api/files/upload
+    S->>KMS: Wrap DEK with KMS key
+    KMS-->>S: KMS-wrapped DEK
+    S->>S3: Store encrypted file
+    S3-->>S: Storage confirmation
+    S->>S: Save metadata to PostgreSQL
+    S-->>B: Upload success response
+    B-->>U: ✅ File uploaded securely
+```
+
+---
+
+## 3. Encryption Flow - File Download
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant B as Browser
+    participant S as Server
+    participant S3 as AWS S3
+    participant KMS as AWS KMS
+
+    U->>B: Request file download
+    B->>S: GET /api/files/download?fileId=xxx
+    S->>S3: Fetch encrypted file
+    S3-->>S: Encrypted data
+    S->>S: Get metadata from PostgreSQL
+    S->>KMS: Unwrap DEK (optional)
+    KMS-->>S: Unwrapped DEK
+    S-->>B: Encrypted data + crypto params
+    B->>B: Verify HMAC signature
+    B->>B: Unwrap DEK with RSA private key
+    B->>B: Decrypt with AES-256-GCM
+    B->>B: Verify auth tag
+    B-->>U: ✅ Original file
+```
+
+---
+
+## 4. Envelope Encryption Pattern
+
+```mermaid
+flowchart LR
+    subgraph Input
+        P[Plaintext File<br/>Any Size]
+    end
+    
+    subgraph Symmetric["Symmetric Encryption"]
+        DEK[Random DEK<br/>32 bytes]
+        AES[AES-256-GCM]
+        CT[Ciphertext<br/>Same Size + 16 bytes]
+    end
+    
+    subgraph Asymmetric["Asymmetric Encryption"]
+        PK[User Public Key<br/>RSA-4096]
+        RSA[RSA-OAEP]
+        WDEK[Wrapped DEK<br/>512 bytes]
+    end
+    
+    subgraph Output
+        O1[Encrypted File]
+        O2[Wrapped DEK]
+        O3[IV + AuthTag]
+    end
+    
+    P --> AES
+    DEK --> AES
+    DEK --> RSA
+    PK --> RSA
+    AES --> CT
+    RSA --> WDEK
+    CT --> O1
+    WDEK --> O2
+    AES --> O3
+```
+
+---
+
+## 5. 7 Security Layers
+
+```mermaid
+flowchart TB
+    subgraph L7["Layer 7: Audit Trail"]
+        A7[ECDSA Signatures + Hash Chain]
+    end
+    
+    subgraph L6["Layer 6: Access Control"]
+        A6[Attribute-Based Encryption]
+    end
+    
+    subgraph L5["Layer 5: Cloud KMS"]
+        A5[AWS/GCP Key Management]
+    end
+    
+    subgraph L4["Layer 4: Multi-Cloud"]
+        A4[AWS S3 + GCP Storage]
+    end
+    
+    subgraph L3["Layer 3: Integrity"]
+        A3[HMAC-SHA512]
+    end
+    
+    subgraph L2["Layer 2: Key Wrap"]
+        A2[RSA-4096-OAEP]
+    end
+    
+    subgraph L1["Layer 1: Data Encryption"]
+        A1[AES-256-GCM]
+    end
+    
+    L7 --> L6 --> L5 --> L4 --> L3 --> L2 --> L1
+```
+
+---
+
+## 6. Zero-Knowledge Architecture Comparison
+
+```mermaid
+flowchart LR
+    subgraph Traditional["❌ Traditional Cloud Storage"]
+        T1[User] --> T2[Server<br/>Can Read Data]
+        T2 --> T3[(Storage)]
+    end
+    
+    subgraph ZK["✅ CryptoVault Zero-Knowledge"]
+        Z1[User<br/>Encrypts] --> Z2[Server<br/>Cannot Read]
+        Z2 --> Z3[(Encrypted<br/>Storage)]
+    end
+```
+
+---
+
+## 7. Schnorr Zero-Knowledge Proof Protocol
+
+```mermaid
+sequenceDiagram
+    participant P as Prover (Alice)
+    participant V as Verifier (Bob)
+    
+    Note over P: Has private key x
+    Note over V: Has public key y = g^x
+    
+    P->>P: Pick random r
+    P->>P: Compute v = g^r
+    P->>V: 1. Commitment: v
+    
+    V->>V: Compute c = H(v || y || context)
+    V->>P: 2. Challenge: c
+    
+    P->>P: Compute s = r + c*x (mod n)
+    P->>V: 3. Response: s
+    
+    V->>V: Check: g^s == v * y^c
+    
+    Note over V: ✅ Proof verified!<br/>Alice knows x without revealing it
+```
+
+---
+
+## 8. Shamir's Secret Sharing
+
+```mermaid
+flowchart TB
+    S[Secret Key] --> P[Random Polynomial<br/>f(x) = S + ax + bx²]
+    
+    P --> S1[Share 1<br/>f(1)]
+    P --> S2[Share 2<br/>f(2)]
+    P --> S3[Share 3<br/>f(3)]
+    P --> S4[Share 4<br/>f(4)]
+    P --> S5[Share 5<br/>f(5)]
+    
+    S1 --> AWS[(AWS KMS)]
+    S2 --> GCP[(GCP KMS)]
+    S3 --> UD[User Device]
+    S4 --> B1[(Backup 1)]
+    S5 --> B2[(Backup 2)]
+    
+    subgraph Recovery["Any 3 Shares Reconstruct"]
+        R1[Share 1] --> L[Lagrange<br/>Interpolation]
+        R2[Share 3] --> L
+        R3[Share 4] --> L
+        L --> RS[Recovered Secret]
+    end
+```
+
+---
+
+## 9. Proxy Re-Encryption (File Sharing)
+
+```mermaid
+sequenceDiagram
+    participant A as Alice (Owner)
+    participant P as Proxy Server
+    participant B as Bob (Recipient)
+    
+    Note over A: Has file encrypted<br/>with her public key
+    
+    A->>A: Generate re-encryption key<br/>rk_A→B
+    A->>P: Send rk_A→B
+    
+    B->>P: Request shared file
+    P->>P: Transform ciphertext<br/>using rk_A→B
+    Note over P: ⚠️ Proxy never sees<br/>plaintext!
+    P->>B: Re-encrypted ciphertext
+    
+    B->>B: Decrypt with own<br/>private key
+    Note over B: ✅ Bob has the file!
+```
+
+---
+
+## 10. BB84 Quantum Key Distribution
+
+```mermaid
+sequenceDiagram
+    participant A as Alice
+    participant Q as Quantum Channel
+    participant B as Bob
+    
+    Note over A: Generate random bits<br/>Choose random bases
+    
+    A->>Q: Send qubits in chosen bases
+    Note over Q: Quantum states transmitted
+    
+    Q->>B: Qubits arrive
+    Note over B: Choose random<br/>measurement bases
+    B->>B: Measure qubits
+    
+    A->>B: Reveal bases (classical)
+    B->>A: Reveal bases (classical)
+    
+    Note over A,B: Keep bits where<br/>bases matched
+    
+    A->>B: Sample bits for error check
+    B->>A: Compare sample
+    
+    alt Error rate < 11%
+        Note over A,B: ✅ Secure key established!
+    else Error rate > 11%
+        Note over A,B: 🚨 Eavesdropper detected!<br/>Abort key exchange
+    end
+```
+
+---
+
+## 11. Database Entity Relationship
+
+```mermaid
+erDiagram
+    USER ||--o{ FILE : owns
+    USER ||--o{ AUDIT_LOG : generates
+    USER ||--o{ SHARED_FILE : shares
+    USER ||--o{ SHARED_FILE : receives
+    USER ||--o{ USER_ATTRIBUTE : has
+    
+    FILE ||--o{ SHARED_FILE : shared_as
+    FILE ||--o{ AUDIT_LOG : logged
+    FILE ||--o| FILE_METADATA : has
+    
+    USER {
+        string id PK
+        string email UK
+        string passwordHash
+        string publicKey
+        string privateKeyEncrypted
+        string ecdsaPublicKey
+        string zkpPublicKey
+        json mpcKeyShares
+    }
+    
+    FILE {
+        string id PK
+        string userId FK
+        string originalFilename
+        string encryptedDEK
+        string hmacSignature
+        string iv
+        string authTag
+        string storageKey
+    }
+    
+    SHARED_FILE {
+        string id PK
+        string fileId FK
+        string sharedByUserId FK
+        string sharedWithUserId FK
+        string reEncryptionKey
+        boolean canDownload
+    }
+    
+    AUDIT_LOG {
+        string id PK
+        string userId FK
+        string fileId FK
+        string action
+        string signature
+        string previousHash
+    }
+```
+
+---
+
+## 12. Authentication Flow
+
+```mermaid
+flowchart TD
+    A[User] --> B{Has Account?}
+    
+    B -->|No| C[Register]
+    C --> D[Generate RSA-4096 Keypair]
+    D --> E[Encrypt Private Key with Password]
+    E --> F[Store in PostgreSQL]
+    F --> G[Issue JWT Token]
+    
+    B -->|Yes| H[Login]
+    H --> I[Verify Password Hash]
+    I --> J{Valid?}
+    J -->|No| K[Error: Invalid Credentials]
+    J -->|Yes| L[Decrypt Private Key]
+    L --> M[Load into Session]
+    M --> G
+    
+    G --> N[Set HTTP-only Cookie]
+    N --> O[Access Dashboard]
+```
+
+---
+
+## 13. Technology Stack
+
+```mermaid
+flowchart TB
+    subgraph Frontend["Frontend Layer"]
+        NX[Next.js 15]
+        RE[React 18]
+        TS[TypeScript]
+        TW[Tailwind CSS]
+        FM[Framer Motion]
+    end
+    
+    subgraph Backend["Backend Layer"]
+        API[API Routes]
+        PR[Prisma ORM]
+        JW[JWT Auth]
+    end
+    
+    subgraph Crypto["Cryptography Layer"]
+        WC[Web Crypto API]
+        NC[Noble Curves]
+        NH[Noble Hashes]
+    end
+    
+    subgraph Cloud["Cloud Layer"]
+        S3[AWS S3]
+        KMS[AWS KMS]
+        PG[(PostgreSQL)]
+    end
+    
+    Frontend --> Backend
+    Backend --> Crypto
+    Backend --> Cloud
+```
+
+---
+
+## 14. File Lifecycle
+
+```mermaid
+stateDiagram-v2
+    [*] --> Selected: User selects file
+    Selected --> Encrypted: Client-side encryption
+    Encrypted --> Uploading: Upload to server
+    Uploading --> Stored: Saved to S3 + DB
+    Stored --> Downloaded: User downloads
+    Downloaded --> Decrypted: Client-side decryption
+    Decrypted --> [*]: File opened
+    
+    Stored --> Shared: User shares file
+    Shared --> ReEncrypted: Proxy re-encryption
+    ReEncrypted --> Stored
+    
+    Stored --> Deleted: Soft delete
+    Deleted --> [*]: Permanently removed
+```
+
+---
+
+## 15. Cryptographic Module Dependencies
+
+```mermaid
+flowchart TB
+    subgraph Core["Core Modules"]
+        AES[aes.ts]
+        RSA[rsa.ts]
+        SHA[sha.ts]
+        HMAC[hmac.ts]
+    end
+    
+    subgraph Composite["Composite Modules"]
+        ENV[envelope-encryption.ts]
+        HASH[hashing.ts]
+    end
+    
+    subgraph Advanced["Advanced Crypto"]
+        ZKP[zkp/schnorr.ts]
+        MPC[mpc/shamir.ts]
+        ABE[abe/cp-abe.ts]
+        FHE[fhe/seal-wrapper.ts]
+        ORAM[oram/path-oram.ts]
+        PRE[proxy-re-encryption/afgh.ts]
+        PQ[post-quantum/kyber.ts]
+        QKD[post-quantum/qkd.ts]
+    end
+    
+    subgraph Auth["Authentication"]
+        X509[x509.ts]
+        KERB[kerberos.ts]
+        ECDSA[ecdsa.ts]
+    end
+    
+    AES --> ENV
+    RSA --> ENV
+    SHA --> HASH
+    HMAC --> ENV
+    
+    AES --> ABE
+    RSA --> PRE
+    SHA --> PRE
+    
+    AES --> KERB
+    HMAC --> KERB
+    SHA --> KERB
+    
+    ECDSA --> X509
+    SHA --> X509
+```
+
+---
+
+## How to Render These Diagrams
+
+### Option 1: GitHub
+Simply push this file to GitHub - Mermaid diagrams render automatically in markdown preview.
+
+### Option 2: VS Code
+Install the "Markdown Preview Mermaid Support" extension.
+
+### Option 3: Export as Images
+Use [Mermaid Live Editor](https://mermaid.live/) to paste diagrams and export as PNG/SVG.
+
+### Option 4: Presentation Software
+1. Export as SVG from Mermaid Live Editor
+2. Import into PowerPoint/Google Slides
+3. Resize and style as needed
+
+---
+
+*Generated for CryptoVault Enterprise - January 2026*
+
+
+---
+
+
+# Frequently Asked Questions
+
+
+# ❓ CryptoVault Enterprise - FAQ
+
+> Frequently Asked Questions about the project
+
+---
+
+## General Questions
+
+### What is CryptoVault Enterprise?
+
+CryptoVault Enterprise is a **zero-knowledge encrypted file storage system** that implements military-grade security with 7 layers of encryption. Unlike traditional cloud storage, all encryption happens in your browser before data is uploaded - meaning we can never see or access your files.
+
+### What makes this different from Dropbox/Google Drive?
+
+| Feature | Dropbox/Google Drive | CryptoVault |
+|---------|---------------------|-------------|
+| **Encryption location** | Server-side | Client-side (your browser) |
+| **Who holds the keys** | Provider | You |
+| **Can provider read files** | Yes | No |
+| **Quantum protection** | No | Yes (Kyber) |
+| **Audit trail** | Provider-controlled | Blockchain-style, immutable |
+
+### Is this production-ready?
+
+The cryptographic implementations use industry-standard algorithms (AES-256-GCM, RSA-4096-OAEP) via the Web Crypto API. However, some advanced features (FHE, Kyber) are simulated for demonstration purposes. The core encryption workflow is production-ready.
+
+---
+
+## Security Questions
+
+### How are my files encrypted?
+
+Your files go through multiple encryption layers:
+
+1. **AES-256-GCM**: Your file is encrypted with a random 256-bit key (DEK)
+2. **RSA-4096-OAEP**: The DEK is wrapped with your RSA public key
+3. **HMAC-SHA512**: An integrity signature is generated
+4. **AWS KMS** (optional): The wrapped DEK is further encrypted with cloud KMS
+
+All encryption happens in your browser before upload. The server only sees encrypted bytes.
+
+### What happens if I forget my password?
+
+**You lose access to your files.** This is by design - zero-knowledge means we cannot recover your data. However, you can:
+
+1. Use **Shamir's Secret Sharing** to create backup key shares
+2. Store shares in multiple locations (AWS KMS, GCP KMS, physical backup)
+3. Any 3 of 5 shares can reconstruct your key
+
+### Can you (the provider) read my files?
+
+**No.** We implement true zero-knowledge architecture:
+
+- Your files are encrypted in your browser before upload
+- Your private key is encrypted with your password
+- We store only encrypted data and encrypted keys
+- Even with full database access, we cannot decrypt your files
+
+### What if your servers are hacked?
+
+An attacker would get:
+- Encrypted file content (ciphertext)
+- Encrypted DEKs (RSA-wrapped)
+- Encrypted private keys (password-encrypted)
+- Password hashes (bcrypt)
+
+Without your password, they cannot decrypt anything. The RSA-4096 keys would take billions of years to crack.
+
+### Is this quantum-safe?
+
+Partially. We implement:
+
+- **CRYSTALS-Kyber**: NIST-standard post-quantum key encapsulation
+- **Hybrid encryption**: Classical + post-quantum for future-proofing
+- **Algorithm agility**: Designed for easy migration to new algorithms
+
+AES-256 remains secure against quantum attacks (Grover's algorithm only halves the effective key length to 128 bits).
+
+---
+
+## Technical Questions
+
+### What cryptographic algorithms are used?
+
+| Purpose | Algorithm |
+|---------|-----------|
+| File encryption | AES-256-GCM |
+| Key wrapping | RSA-4096-OAEP |
+| Signatures | ECDSA P-384 |
+| Hashing | SHA-256, SHA-512 |
+| Integrity | HMAC-SHA512 |
+| Key exchange | Diffie-Hellman, ECDH |
+| Post-quantum | CRYSTALS-Kyber |
+| Zero-knowledge | Schnorr Protocol |
+| Secret sharing | Shamir's (t,n) |
+| Access control | CP-ABE |
+
+See [TECHNICAL_DOCS.md](./TECHNICAL_DOCS.md) for complete details.
+
+### Why AES-256-GCM and not ChaCha20-Poly1305?
+
+Both are excellent choices. We chose AES-256-GCM because:
+
+1. Hardware acceleration on most CPUs (AES-NI)
+2. NIST FIPS 197 compliance
+3. Native Web Crypto API support
+4. Widely audited and deployed
+
+ChaCha20-Poly1305 is available in `symmetric-ciphers.ts` for mobile devices without AES hardware acceleration.
+
+### Why RSA-4096 instead of RSA-2048?
+
+RSA-4096 provides ~140 bits of security vs ~112 bits for RSA-2048. Since files may be stored for years, we chose higher security margins. The performance cost is acceptable since RSA is only used for key wrapping (small data).
+
+### How does envelope encryption work?
+
+```
+1. Generate random DEK (32 bytes)
+2. Encrypt large file with AES-256-GCM using DEK → Ciphertext
+3. Encrypt small DEK with RSA-4096 using public key → Wrapped DEK
+4. Store: Ciphertext + Wrapped DEK + IV + AuthTag
+
+To decrypt:
+1. Unwrap DEK with private key
+2. Decrypt ciphertext with DEK
+```
+
+This combines the speed of symmetric encryption with the key distribution of asymmetric encryption.
+
+### What is Proxy Re-Encryption?
+
+Proxy Re-Encryption (PRE) allows secure file sharing without exposing your private key:
+
+1. Alice encrypts file with her public key
+2. Alice generates a "re-encryption key" (Alice → Bob)
+3. A proxy transforms the ciphertext for Bob
+4. Bob decrypts with his own private key
+5. **The proxy never sees the plaintext!**
+
+This is implemented using the AFGH scheme in `proxy-re-encryption/afgh.ts`.
+
+### What is Attribute-Based Encryption?
+
+ABE allows encryption with access policies based on attributes:
+
+```javascript
+// Encrypt with policy
+abeEncrypt(data, "(role:admin) OR (dept:security AND level:5)")
+
+// User with attributes { role: "admin" } can decrypt
+// User with attributes { dept: "security", level: "5" } can decrypt
+// User with attributes { dept: "hr" } CANNOT decrypt
+```
+
+This is implemented in `abe/cp-abe.ts`.
+
+### How does the audit trail work?
+
+Each audit entry is:
+
+1. **Signed**: ECDSA P-384 signature
+2. **Chained**: Contains hash of previous entry
+3. **Verifiable**: Merkle proofs for batch verification
+
+Like a blockchain, tampering with any entry breaks the hash chain and invalidates all subsequent entries.
+
+---
+
+## Implementation Questions
+
+### What tech stack is used?
+
+**Frontend:**
+- Next.js 15 (App Router)
+- React 18
+- TypeScript
+- Tailwind CSS
+- Framer Motion
+
+**Backend:**
+- Next.js API Routes
+- Prisma ORM
+- PostgreSQL
+- JWT Authentication
+
+**Cryptography:**
+- Web Crypto API
+- @noble/curves
+- @noble/hashes
+
+**Cloud:**
+- AWS S3 (storage)
+- AWS KMS (key management)
+- GCP Cloud Storage (optional backup)
+
+### How do I run this locally?
+
+```bash
+# Clone and install
+git clone <repo>
+cd cryptovault-enterprise
+npm install
+
+# Set up environment
+cp .env.example .env.local
+# Edit .env.local with your config
+
+# Set up database
+npm run db:generate
+npm run db:push
+
+# Run development server
+npm run dev
+```
+
+### Do I need AWS/GCP for development?
+
+No! The project includes a **local storage fallback** (`lib/storage/local-storage.ts`) that uses browser localStorage for development. You can also use **demo mode** at `/demo` which doesn't require authentication.
+
+### What environment variables are needed?
+
+```env
+# Required
+DATABASE_URL="postgresql://..."
+JWT_SECRET="your-256-bit-secret"
+
+# Optional (for cloud storage)
+AWS_REGION="ap-south-1"
+AWS_ACCESS_KEY_ID="..."
+AWS_SECRET_ACCESS_KEY="..."
+AWS_S3_BUCKET="your-bucket"
+AWS_KMS_KEY_ARN="..."
+
+# Feature flags
+ENABLE_POST_QUANTUM="true"
+ENABLE_FHE="false"
+```
+
+---
+
+## Performance Questions
+
+### How fast is the encryption?
+
+Approximate benchmarks (varies by device):
+
+| Operation | Speed |
+|-----------|-------|
+| AES-256-GCM | ~500 MB/s |
+| SHA-256 | ~1 GB/s |
+| RSA-4096 Encrypt | ~5 ops/s |
+| RSA-4096 Decrypt | ~50 ops/s |
+| ECDSA Sign | ~100 ops/s |
+
+File encryption is limited by AES speed. Key operations are fast because RSA is only used for the 32-byte DEK.
+
+### What's the storage overhead?
+
+Fixed overhead per file:
+- IV: 12 bytes
+- Auth Tag: 16 bytes
+- Wrapped DEK: 512 bytes (RSA-4096)
+- HMAC: 64 bytes (SHA-512)
+- **Total: ~600 bytes** per file
+
+For a 10MB file, overhead is 0.006%.
+
+### What's the maximum file size?
+
+Theoretically unlimited, but currently limited by browser memory. For files over 100MB, consider:
+
+1. Chunked encryption (future feature)
+2. Streaming encryption
+3. Web Workers for parallel processing
+
+---
+
+## Demo Mode Questions
+
+### What is demo mode?
+
+Demo mode (`/demo`) allows testing the full encryption workflow without:
+- Account creation
+- AWS/GCP configuration
+- Database setup
+
+It uses localStorage for storage and pre-generated demo keys.
+
+### Is demo mode secure?
+
+Demo mode is for **demonstration only**. Differences from production:
+
+| Feature | Production | Demo Mode |
+|---------|------------|-----------|
+| Key storage | Server (encrypted) | Browser localStorage |
+| File storage | AWS S3 | Browser localStorage |
+| Authentication | JWT + bcrypt | None |
+| DEK handling | RSA-wrapped | Raw (for simplicity) |
+
+**Never use demo mode for sensitive data.**
+
+---
+
+## Academic/Research Questions
+
+### What papers/standards is this based on?
+
+**Standards:**
+- NIST SP 800-38D (AES-GCM)
+- RFC 8017 (RSA-OAEP)
+- NIST FIPS 186-5 (ECDSA)
+- NIST SP 800-56A (ECDH)
+
+**Research Papers:**
+- Shamir (1979) - "How to Share a Secret"
+- Schnorr (1991) - "Efficient Signature Generation"
+- Stefanov et al. (2013) - "Path ORAM"
+- Bethencourt et al. (2007) - "CP-ABE"
+- Bennett & Brassard (1984) - "BB84 QKD"
+
+### Can I use this for my thesis/project?
+
+Yes! This project is designed to demonstrate real-world application of cryptographic concepts. Please:
+
+1. Cite the original papers (listed above)
+2. Note that some features (FHE, Kyber) are simulated
+3. Reference the [TECHNICAL_DOCS.md](./TECHNICAL_DOCS.md) for implementation details
+
+### What concepts does this project demonstrate?
+
+1. **Symmetric Encryption**: AES-256-GCM
+2. **Asymmetric Encryption**: RSA-4096-OAEP
+3. **Envelope Encryption**: AES + RSA combination
+4. **Digital Signatures**: ECDSA, EdDSA
+5. **Key Exchange**: Diffie-Hellman, ECDH
+6. **Hashing & MACs**: SHA-256/512, HMAC
+7. **Post-Quantum Crypto**: CRYSTALS-Kyber
+8. **Zero-Knowledge Proofs**: Schnorr Protocol
+9. **Secret Sharing**: Shamir's (t,n)
+10. **Attribute-Based Encryption**: CP-ABE
+11. **Homomorphic Encryption**: BFV/CKKS
+12. **Oblivious RAM**: Path ORAM
+13. **Proxy Re-Encryption**: AFGH scheme
+14. **PKI**: X.509 certificates
+15. **Authentication**: Kerberos-style tickets
+16. **Audit Trails**: Blockchain-style logging
+
+---
+
+## Troubleshooting
+
+### "Failed to decrypt file" error
+
+Possible causes:
+1. **Wrong password**: Private key can't be decrypted
+2. **Corrupted download**: Auth tag verification failed
+3. **File modified**: HMAC signature mismatch
+
+Solution: Verify password is correct and retry download.
+
+### "S3 upload failed" error
+
+Check:
+1. AWS credentials in `.env.local`
+2. S3 bucket exists and is accessible
+3. IAM permissions include S3 write access
+
+### Build errors related to crypto
+
+The Web Crypto API requires a secure context (HTTPS or localhost). Ensure you're running on `localhost:3000` or with HTTPS.
+
+### "Module not found: @/components/ui/..."
+
+Run:
+```bash
+npm install
+npx shadcn-ui@latest add [component-name]
+```
+
+---
+
+*See also:*
+- [README.md](./README.md) - Project overview
+- [TECHNICAL_DOCS.md](./TECHNICAL_DOCS.md) - API documentation
+- [SECURITY.md](./SECURITY.md) - Security details
+- [GLOSSARY.md](./GLOSSARY.md) - Cryptographic terms
+
+
+---
+
+
+# Cryptographic Glossary
+
+
+# 📖 CryptoVault Enterprise - Cryptography Glossary
+
+> Definitions of cryptographic terms and concepts used in this project
+
+---
+
+## A
+
+### AES (Advanced Encryption Standard)
+A symmetric block cipher adopted by NIST. CryptoVault uses **AES-256** with 256-bit keys, providing 128 bits of security against classical computers.
+
+### AEAD (Authenticated Encryption with Associated Data)
+Encryption that provides both confidentiality and integrity. **AES-GCM** is an AEAD cipher - it encrypts data and produces an authentication tag to detect tampering.
+
+### Asymmetric Encryption
+Encryption using a key pair (public + private). Anyone can encrypt with the public key, but only the private key holder can decrypt. **RSA** and **ElGamal** are examples.
+
+### Authentication Tag (Auth Tag)
+A cryptographic checksum produced during authenticated encryption. In **AES-GCM**, the 128-bit auth tag verifies that ciphertext hasn't been modified.
+
+### Attribute-Based Encryption (ABE)
+Encryption where decryption ability depends on user attributes matching a policy. **CP-ABE** (Ciphertext-Policy ABE) embeds the access policy in the ciphertext.
+
+---
+
+## B
+
+### BB84 Protocol
+The first quantum key distribution protocol, invented by Bennett and Brassard in 1984. Uses quantum properties to detect eavesdroppers during key exchange.
+
+### bcrypt
+A password hashing function based on Blowfish. Intentionally slow to resist brute-force attacks. Uses a configurable "cost factor" to increase computation time.
+
+### Block Cipher
+A cipher that encrypts fixed-size blocks (e.g., AES encrypts 128-bit blocks). Requires a "mode of operation" (like GCM) to encrypt variable-length data.
+
+---
+
+## C
+
+### Certificate (X.509)
+A digital document binding a public key to an identity, signed by a Certificate Authority. Contains subject name, validity period, public key, and CA signature.
+
+### Certificate Authority (CA)
+A trusted entity that issues digital certificates. The CA vouches for the identity of certificate holders.
+
+### Ciphertext
+Encrypted data. The unreadable output of an encryption algorithm.
+
+### Client-Side Encryption
+Encryption performed in the user's browser before data is sent to the server. The server never sees plaintext.
+
+### Commitment Scheme
+A cryptographic protocol where one party "commits" to a value without revealing it, then later "opens" the commitment to prove the value.
+
+### CRL (Certificate Revocation List)
+A list of certificates that have been revoked before their expiration date. Used to invalidate compromised keys.
+
+### Cryptographic Hash
+A one-way function that maps data to a fixed-size output (digest). Properties: deterministic, fast, collision-resistant, preimage-resistant.
+
+---
+
+## D
+
+### DEK (Data Encryption Key)
+The symmetric key used to encrypt file data. In envelope encryption, the DEK is itself encrypted with an asymmetric key.
+
+### Diffie-Hellman (DH)
+A key exchange protocol allowing two parties to establish a shared secret over an insecure channel. Based on the discrete logarithm problem.
+
+### Digital Signature
+A cryptographic mechanism to verify authenticity and integrity. Created with a private key, verified with the corresponding public key.
+
+---
+
+## E
+
+### ECDH (Elliptic Curve Diffie-Hellman)
+Diffie-Hellman key exchange using elliptic curves. Provides equivalent security to classical DH with smaller keys.
+
+### ECDSA (Elliptic Curve Digital Signature Algorithm)
+A digital signature algorithm using elliptic curves. More efficient than RSA for equivalent security levels.
+
+### EdDSA (Edwards-curve Digital Signature Algorithm)
+A signature scheme using twisted Edwards curves (e.g., Ed25519). Deterministic signatures, fast, and resistant to side-channel attacks.
+
+### ElGamal
+An asymmetric encryption scheme based on Diffie-Hellman. Provides semantic security under the DDH assumption.
+
+### Envelope Encryption
+A pattern combining symmetric and asymmetric encryption: encrypt data with a random DEK (fast), encrypt the DEK with a public key (secure key distribution).
+
+---
+
+## F
+
+### Forward Secrecy
+Property ensuring that compromise of long-term keys doesn't compromise past session keys. Achieved by generating ephemeral keys for each session.
+
+### FHE (Fully Homomorphic Encryption)
+Encryption that allows computations on ciphertext, producing encrypted results that match operations on plaintext. Enables "blind" computation.
+
+---
+
+## G
+
+### GCM (Galois/Counter Mode)
+An authenticated encryption mode for block ciphers. Combines CTR mode encryption with GHASH authentication. Used in **AES-256-GCM**.
+
+### Grover's Algorithm
+A quantum algorithm that speeds up brute-force search, effectively halving the security of symmetric keys. AES-256 has ~128-bit security against quantum attacks.
+
+---
+
+## H
+
+### Hash Function
+See "Cryptographic Hash"
+
+### HKDF (HMAC-based Key Derivation Function)
+A key derivation function using HMAC. Extracts entropy from input material and expands it to desired key length.
+
+### HMAC (Hash-based Message Authentication Code)
+A MAC using a cryptographic hash and secret key. HMAC-SHA512 provides authentication and integrity verification.
+
+### Homomorphic Encryption
+Encryption allowing computations on ciphertext. **Partially homomorphic** supports one operation type; **Fully homomorphic** supports arbitrary computations.
+
+### HSM (Hardware Security Module)
+Dedicated hardware for secure key storage and cryptographic operations. Provides physical protection for keys.
+
+---
+
+## I
+
+### Initialization Vector (IV)
+A random value used with encryption algorithms to ensure different ciphertexts for identical plaintexts. AES-GCM uses a 96-bit IV.
+
+### Integrity
+The property that data hasn't been modified. Verified using MACs, digital signatures, or authenticated encryption.
+
+---
+
+## J
+
+### JWT (JSON Web Token)
+A compact, URL-safe token format for claims. Contains header, payload, and signature. Used for authentication in web applications.
+
+---
+
+## K
+
+### KEK (Key Encryption Key)
+A key used to encrypt other keys. In CryptoVault, the RSA public key acts as a KEK for DEKs.
+
+### Kerberos
+A network authentication protocol using tickets and symmetric cryptography. Involves a Key Distribution Center (KDC), Authentication Service (AS), and Ticket Granting Service (TGS).
+
+### Key Derivation Function (KDF)
+A function that derives cryptographic keys from a password or other keying material. Examples: PBKDF2, HKDF, Argon2.
+
+### Key Exchange
+A protocol for two parties to establish a shared secret over an insecure channel. Examples: Diffie-Hellman, ECDH.
+
+### Key Wrapping
+Encryption of cryptographic keys for secure storage or transport. RSA-OAEP is commonly used for key wrapping.
+
+### KMS (Key Management Service)
+A cloud service for managing cryptographic keys. AWS KMS and GCP Cloud KMS provide centralized key management.
+
+### Kyber
+A lattice-based key encapsulation mechanism (KEM) selected by NIST for post-quantum standardization. Resistant to quantum computer attacks.
+
+---
+
+## L
+
+### Lagrange Interpolation
+A mathematical technique for polynomial interpolation. Used in Shamir's Secret Sharing to reconstruct the secret from shares.
+
+### Lattice-Based Cryptography
+Cryptographic schemes based on hard lattice problems (e.g., Learning With Errors). Believed to be quantum-resistant.
+
+---
+
+## M
+
+### MAC (Message Authentication Code)
+A short piece of information used to authenticate a message and verify integrity. HMAC is a common MAC construction.
+
+### Merkle Tree
+A tree structure where each leaf is a hash of data, and each non-leaf node is a hash of its children. Enables efficient verification of large data sets.
+
+### MPC (Multi-Party Computation)
+Protocols allowing multiple parties to jointly compute a function while keeping their inputs private.
+
+---
+
+## N
+
+### Nonce
+A "number used once" - a random or sequential value ensuring uniqueness. Often used interchangeably with IV, though technically distinct.
+
+### NIST
+National Institute of Standards and Technology. Sets cryptographic standards for the US government (AES, SHA-3, post-quantum).
+
+---
+
+## O
+
+### OAEP (Optimal Asymmetric Encryption Padding)
+A padding scheme for RSA that provides security against chosen-ciphertext attacks. RSA-OAEP is recommended over PKCS#1 v1.5.
+
+### ORAM (Oblivious RAM)
+Techniques to hide data access patterns from the storage provider. The server can't tell which data blocks are being accessed.
+
+---
+
+## P
+
+### PBKDF2 (Password-Based Key Derivation Function 2)
+A KDF that applies a pseudorandom function (like HMAC) many times to derive a key from a password. Configurable iteration count slows brute-force attacks.
+
+### PEM (Privacy-Enhanced Mail)
+A file format for cryptographic objects (keys, certificates). Base64-encoded DER with header/footer lines.
+
+### PGP (Pretty Good Privacy)
+An encryption program using a web of trust model. Combines symmetric encryption, asymmetric encryption, and digital signatures.
+
+### PKI (Public Key Infrastructure)
+The set of roles, policies, and procedures for managing digital certificates. Includes CAs, registration authorities, and certificate repositories.
+
+### Plaintext
+Unencrypted data. The input to an encryption algorithm or output of decryption.
+
+### Post-Quantum Cryptography (PQC)
+Cryptographic algorithms designed to be secure against quantum computers. Examples: Kyber (KEMs), Dilithium (signatures).
+
+### PRE (Proxy Re-Encryption)
+Encryption allowing a proxy to transform ciphertext from one key to another without accessing plaintext. Enables secure delegation of decryption rights.
+
+---
+
+## Q
+
+### QKD (Quantum Key Distribution)
+Key exchange using quantum mechanics. Provides information-theoretic security and detects eavesdropping through quantum measurement disturbance.
+
+### Quantum-Safe / Quantum-Resistant
+Cryptographic algorithms believed to be secure against both classical and quantum computers.
+
+---
+
+## R
+
+### RSA
+An asymmetric cryptosystem based on the difficulty of factoring large integers. Named after Rivest, Shamir, and Adleman. CryptoVault uses **RSA-4096**.
+
+---
+
+## S
+
+### Salt
+Random data added to input before hashing (e.g., password + salt). Prevents rainbow table attacks and ensures unique hashes for identical passwords.
+
+### Schnorr Protocol
+A zero-knowledge proof protocol for proving knowledge of a discrete logarithm. More efficient than earlier ZKP protocols.
+
+### Secret Sharing
+Techniques to split a secret into multiple shares such that a threshold number of shares can reconstruct the original.
+
+### Semantic Security
+An encryption scheme is semantically secure if an attacker can't learn any information about plaintext from ciphertext.
+
+### Session Key
+A temporary symmetric key used for a single session or transaction. Provides forward secrecy when properly implemented.
+
+### SHA (Secure Hash Algorithm)
+A family of cryptographic hash functions standardized by NIST. SHA-256 (256-bit output) and SHA-512 (512-bit output) are widely used.
+
+### Shamir's Secret Sharing
+A threshold secret sharing scheme using polynomial interpolation. Any t shares can reconstruct the secret; fewer than t reveals nothing.
+
+### Shor's Algorithm
+A quantum algorithm that efficiently factors integers and computes discrete logarithms. Breaks RSA and elliptic curve cryptography.
+
+### Side-Channel Attack
+Attacks exploiting information leaked through implementation (timing, power consumption, electromagnetic emissions) rather than cryptographic weaknesses.
+
+### Symmetric Encryption
+Encryption where the same key is used for encryption and decryption. Faster than asymmetric but requires secure key distribution.
+
+---
+
+## T
+
+### TGT (Ticket Granting Ticket)
+In Kerberos, a ticket obtained from the Authentication Service that allows requesting service tickets from the TGS.
+
+### Threshold Cryptography
+Cryptographic schemes requiring cooperation of multiple parties (a threshold) to perform operations. Prevents single points of failure.
+
+### TLS (Transport Layer Security)
+The protocol securing HTTPS connections. Provides encryption, authentication, and integrity for network communications.
+
+---
+
+## U
+
+### UUID/CUID
+Unique identifiers for database records. CryptoVault uses CUIDs (Collision-resistant Unique Identifiers) for file and user IDs.
+
+---
+
+## V
+
+### VSS (Verifiable Secret Sharing)
+Secret sharing with additional verification. Shareholders can verify their shares are consistent without revealing anything about the secret.
+
+---
+
+## W
+
+### Web Crypto API
+A W3C standard API for cryptographic operations in web browsers. Provides access to hardware-accelerated crypto primitives.
+
+---
+
+## X
+
+### X.509
+A standard format for public key certificates. Used in TLS/SSL, code signing, and document signing.
+
+---
+
+## Z
+
+### Zero-Knowledge Proof (ZKP)
+A protocol where one party (prover) can prove to another (verifier) that they know a value without revealing any information about that value.
+
+### Zero-Knowledge Architecture
+A system design where the service provider has zero knowledge of user data. All encryption/decryption happens client-side.
+
+---
+
+*See also: [TECHNICAL_DOCS.md](./TECHNICAL_DOCS.md) for implementation details*
+
+
+---
+
+
+# Contributing Guidelines
+
+
+# 👥 Contributing to CryptoVault Enterprise
+
+Thank you for your interest in contributing to CryptoVault Enterprise! This document provides guidelines for contributing to the project.
+
+---
+
+## Table of Contents
+
+1. [Code of Conduct](#code-of-conduct)
+2. [Getting Started](#getting-started)
+3. [Development Workflow](#development-workflow)
+4. [Coding Standards](#coding-standards)
+5. [Cryptographic Guidelines](#cryptographic-guidelines)
+6. [Testing](#testing)
+7. [Pull Request Process](#pull-request-process)
+8. [Security Vulnerabilities](#security-vulnerabilities)
+
+---
+
+## Code of Conduct
+
+- Be respectful and inclusive
+- Focus on constructive feedback
+- Help others learn and grow
+- Prioritize security and privacy
+
+---
+
+## Getting Started
+
+### 1. Fork and Clone
+
+```bash
+# Fork the repository on GitHub, then:
+git clone https://github.com/YOUR_USERNAME/cryptovault-enterprise.git
+cd cryptovault-enterprise
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Set Up Environment
+
+```bash
+cp .env.example .env.local
+# Edit .env.local with your local settings
+```
+
+### 4. Set Up Database
+
+```bash
+npm run db:generate
+npm run db:push
+```
+
+### 5. Run Development Server
+
+```bash
+npm run dev
+```
+
+---
+
+## Development Workflow
+
+### Branch Naming
+
+```
+feature/description    # New features
+fix/description        # Bug fixes
+docs/description       # Documentation
+refactor/description   # Code refactoring
+security/description   # Security improvements
+```
+
+### Commit Messages
+
+Follow conventional commits:
+
+```
+feat: add post-quantum key exchange
+fix: correct AES-GCM tag verification
+docs: update README with new diagrams
+refactor: optimize RSA key generation
+security: upgrade dependency to patch CVE
+```
+
+### Development Cycle
+
+1. Create a branch from `main`
+2. Make your changes
+3. Write/update tests
+4. Run linting and tests
+5. Submit pull request
+
+---
+
+## Coding Standards
+
+### TypeScript
+
+```typescript
+// ✅ Good: Explicit types, clear naming
+export async function encryptFile(
+    data: ArrayBuffer,
+    publicKey: CryptoKey
+): Promise<EncryptionResult> {
+    // Implementation
+}
+
+// ❌ Bad: Implicit any, unclear naming
+export async function enc(d: any, k: any) {
+    // Implementation
+}
+```
+
+### File Organization
+
+```
+lib/crypto/
+├── index.ts           # Re-exports
+├── aes.ts            # One module per file
+├── rsa.ts
+└── types.ts          # Shared types
+```
+
+### Error Handling
+
+```typescript
+// ✅ Good: Specific error messages
+if (!publicKey) {
+    throw new Error('Public key is required for encryption');
+}
+
+// ❌ Bad: Generic errors
+if (!publicKey) {
+    throw new Error('Error');
+}
+```
+
+### Comments
+
+```typescript
+/**
+ * Encrypts data using AES-256-GCM with a random IV.
+ * 
+ * @param plaintext - Data to encrypt (string or ArrayBuffer)
+ * @param key - Optional AES key (generated if not provided)
+ * @returns Encrypted result with ciphertext, IV, and auth tag
+ * 
+ * @example
+ * const result = await encryptAES('Hello, World!');
+ * console.log(result.ciphertext); // Base64 encoded
+ */
+export async function encryptAES(
+    plaintext: string | ArrayBuffer,
+    key?: CryptoKey
+): Promise<AESEncryptResult> {
+    // Implementation
+}
+```
+
+---
+
+## Cryptographic Guidelines
+
+### ⚠️ Critical Rules
+
+1. **Never implement your own crypto algorithms**
+   - Use Web Crypto API or established libraries
+   - Prefer `@noble/curves` and `@noble/hashes`
+
+2. **Use secure defaults**
+   ```typescript
+   // ✅ Good
+   const key = await crypto.subtle.generateKey(
+       { name: 'AES-GCM', length: 256 }, // 256-bit, not 128
+       true,
+       ['encrypt', 'decrypt']
+   );
+   ```
+
+3. **Always use authenticated encryption**
+   ```typescript
+   // ✅ Good: AES-GCM (authenticated)
+   // ❌ Bad: AES-CBC (not authenticated)
+   ```
+
+4. **Never reuse IVs**
+   ```typescript
+   // ✅ Good: Fresh IV for each encryption
+   const iv = crypto.getRandomValues(new Uint8Array(12));
+   ```
+
+5. **Validate inputs**
+   ```typescript
+   if (iv.length !== 12) {
+       throw new Error('IV must be 12 bytes for AES-GCM');
+   }
+   ```
+
+6. **Constant-time comparisons for secrets**
+   ```typescript
+   // ✅ Good: Constant-time comparison
+   import { timingSafeEqual } from 'crypto';
+   
+   // ❌ Bad: Variable-time comparison
+   if (hash1 === hash2) { ... }
+   ```
+
+### Algorithm Selection
+
+| Use Case | Algorithm | Key Size |
+|----------|-----------|----------|
+| Symmetric encryption | AES-GCM | 256 bits |
+| Key wrapping | RSA-OAEP | 4096 bits |
+| Signatures | ECDSA | P-384 |
+| Hashing | SHA-256/512 | N/A |
+| MACs | HMAC-SHA512 | 256+ bits |
+| Key exchange | ECDH | P-384 |
+
+---
+
+## Testing
+
+### Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run specific test file
+npm test -- lib/crypto/aes.test.ts
+
+# Run with coverage
+npm test -- --coverage
+```
+
+### Writing Tests
+
+```typescript
+// lib/crypto/__tests__/aes.test.ts
+
+import { encryptAES, decryptAES, generateAESKey } from '../aes';
+
+describe('AES-256-GCM', () => {
+    it('should encrypt and decrypt string correctly', async () => {
+        const plaintext = 'Hello, CryptoVault!';
+        const key = await generateAESKey();
+        
+        const encrypted = await encryptAES(plaintext, key);
+        const decrypted = await decryptAES({
+            ciphertext: encrypted.ciphertext,
+            iv: encrypted.iv,
+            authTag: encrypted.authTag,
+            key
+        });
+        
+        expect(decrypted).toBe(plaintext);
+    });
+
+    it('should fail with wrong key', async () => {
+        const plaintext = 'Secret data';
+        const key1 = await generateAESKey();
+        const key2 = await generateAESKey();
+        
+        const encrypted = await encryptAES(plaintext, key1);
+        
+        await expect(decryptAES({
+            ...encrypted,
+            key: key2
+        })).rejects.toThrow();
+    });
+
+    it('should detect tampering', async () => {
+        const plaintext = 'Important data';
+        const key = await generateAESKey();
+        
+        const encrypted = await encryptAES(plaintext, key);
+        
+        // Tamper with ciphertext
+        const tamperedCiphertext = encrypted.ciphertext.slice(0, -4) + 'XXXX';
+        
+        await expect(decryptAES({
+            ...encrypted,
+            ciphertext: tamperedCiphertext,
+            key
+        })).rejects.toThrow();
+    });
+});
+```
+
+### Test Categories
+
+1. **Unit Tests**: Individual functions
+2. **Integration Tests**: API endpoints
+3. **Crypto Tests**: Algorithm correctness
+4. **Security Tests**: Edge cases, invalid inputs
+
+---
+
+## Pull Request Process
+
+### Before Submitting
+
+1. **Run linting**
+   ```bash
+   npm run lint
+   ```
+
+2. **Run type checking**
+   ```bash
+   npm run type-check
+   ```
+
+3. **Run tests**
+   ```bash
+   npm test
+   ```
+
+4. **Update documentation** if needed
+
+### PR Template
+
+```markdown
+## Description
+Brief description of changes
+
+## Type of Change
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Documentation
+- [ ] Refactoring
+- [ ] Security improvement
+
+## Security Checklist (for crypto changes)
+- [ ] Uses established libraries (Web Crypto, @noble/*)
+- [ ] No custom algorithm implementations
+- [ ] Authenticated encryption used
+- [ ] IVs not reused
+- [ ] Inputs validated
+- [ ] Tests added for edge cases
+
+## Testing
+- [ ] Unit tests pass
+- [ ] Integration tests pass
+- [ ] Manual testing performed
+
+## Documentation
+- [ ] README updated (if needed)
+- [ ] Code comments added
+- [ ] API docs updated (if needed)
+```
+
+### Review Process
+
+1. Automated checks must pass
+2. At least one maintainer review
+3. Security-sensitive changes require two reviews
+4. All comments addressed
+
+---
+
+## Security Vulnerabilities
+
+### Reporting
+
+**DO NOT** open public issues for security vulnerabilities.
+
+Instead:
+1. Email: [security contact]
+2. Include detailed description
+3. Include steps to reproduce
+4. Suggested fix (if any)
+
+### Response
+
+- Acknowledgment within 48 hours
+- Fix timeline communicated within 7 days
+- Credit given after fix (if desired)
+
+---
+
+## Questions?
+
+- Check [FAQ.md](./FAQ.md)
+- Review [TECHNICAL_DOCS.md](./TECHNICAL_DOCS.md)
+- Open a discussion issue
+
+---
+
+Thank you for contributing to CryptoVault Enterprise! 🔐
+
+
+---
+
+
+# Changelog
+
+
+# 📝 Changelog
+
+All notable changes to CryptoVault Enterprise will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+---
+
+## [1.0.0] - 2026-01-09
+
+### 🎉 Initial Release
+
+#### Core Features
+- **Client-Side Encryption**: AES-256-GCM file encryption in browser
+- **Envelope Encryption**: RSA-4096-OAEP key wrapping pattern
+- **Zero-Knowledge Architecture**: Server never sees plaintext or keys
+- **Multi-Cloud Storage**: AWS S3 with optional GCP backup
+- **AWS KMS Integration**: Additional key protection layer
+- **HMAC Integrity**: SHA-512 based tamper detection
+- **Merkle Trees**: Chunk-level file integrity verification
+
+#### Cryptographic Modules (20+)
+- `aes.ts` - AES-256-GCM symmetric encryption
+- `rsa.ts` - RSA-4096-OAEP asymmetric encryption
+- `envelope-encryption.ts` - Combined AES+RSA pattern
+- `ecdsa.ts` - ECDSA P-384 digital signatures
+- `eddsa.ts` - Ed25519 signatures
+- `diffie-hellman.ts` - Classic DH key exchange (RFC 3526)
+- `ecdh.ts` - Elliptic Curve Diffie-Hellman
+- `sha.ts` - SHA-256/512 hashing
+- `hmac.ts` - HMAC-SHA512
+- `hashing.ts` - Merkle tree implementation
+- `elgamal.ts` - ElGamal encryption
+- `pgp.ts` - PGP-style message encryption
+- `tls.ts` - TLS handshake simulation
+- `x509.ts` - X.509 PKI certificates
+- `kerberos.ts` - Kerberos ticket authentication
+
+#### Advanced Cryptography
+- `post-quantum/kyber.ts` - CRYSTALS-Kyber KEM (simulated)
+- `post-quantum/qkd.ts` - BB84 QKD simulation
+- `zkp/schnorr.ts` - Schnorr zero-knowledge proofs
+- `mpc/shamir.ts` - Shamir's secret sharing
+- `abe/cp-abe.ts` - Ciphertext-Policy ABE
+- `fhe/seal-wrapper.ts` - FHE simulation (SEAL)
+- `oram/path-oram.ts` - Path ORAM implementation
+- `proxy-re-encryption/afgh.ts` - AFGH PRE scheme
+
+#### User Interface
+- Landing page with feature showcase
+- User registration with RSA key generation
+- Secure login with JWT authentication
+- File upload with real-time encryption progress
+- File download with client-side decryption
+- File management dashboard
+- Key management interface
+- File sharing with proxy re-encryption
+- Analytics dashboard with encryption metrics
+- Crypto lab with interactive demos
+- Visual demonstration page
+
+#### API Endpoints
+- `POST /api/auth/register` - Account creation
+- `POST /api/auth/login` - Authentication
+- `POST /api/auth/logout` - Session termination
+- `GET /api/auth/me` - Current user info
+- `POST /api/files/upload` - Encrypted file upload
+- `GET /api/files/download` - File retrieval
+- `GET /api/files/list` - User files listing
+- `DELETE /api/files/delete` - Soft delete
+- `POST /api/share/create` - Share creation
+- `POST /api/share/revoke` - Access revocation
+- `GET /api/audit` - Audit logs
+- `GET /api/metrics` - Performance metrics
+
+#### Database Schema
+- `users` - User accounts with crypto keys
+- `files` - Encrypted file metadata
+- `shared_files` - File sharing records
+- `audit_logs` - Blockchain-style logging
+- `user_attributes` - ABE attributes
+- `mpc_key_shares` - Shamir shares
+- `mpc_sessions` - MPC session tracking
+- `encryption_metrics` - Performance data
+- `security_events` - Security monitoring
+
+#### Security Features
+- bcrypt password hashing
+- JWT with HTTP-only cookies
+- CORS protection
+- Rate limiting ready
+- ECDSA-signed audit logs
+- Hash-chained log entries
+
+#### Documentation
+- README.md - Main documentation
+- ARCHITECTURE.md - System design
+- TECHNICAL_DOCS.md - API reference
+- SECURITY.md - Threat model
+- FEATURES.md - Feature list
+- PRESENTATION_CONTENT.md - PPT slides
+- DIAGRAMS.md - Mermaid diagrams
+- GLOSSARY.md - Crypto terms
+- FAQ.md - Common questions
+- QUICKSTART.md - Setup guide
+- CONTRIBUTING.md - Contribution guide
+- LICENSE - MIT license
+
+---
+
+## [Unreleased]
+
+### 🚧 Planned Features
+
+#### Near-Term
+- [ ] Chunked upload for large files
+- [ ] Streaming encryption/decryption
+- [ ] Mobile-responsive improvements
+- [ ] 2FA authentication
+- [ ] Password reset flow
+- [ ] Email verification
+
+#### Medium-Term
+- [ ] Hardware Security Module (HSM) integration
+- [ ] Threshold signature support
+- [ ] Real CRYSTALS-Kyber implementation
+- [ ] Browser extension
+- [ ] Desktop application (Electron)
+
+#### Long-Term
+- [ ] iOS/Android mobile apps
+- [ ] IPFS/Filecoin integration
+- [ ] Smart contract audit trail
+- [ ] Intel SGX secure enclave support
+- [ ] Full FHE with Microsoft SEAL
+
+---
+
+## Version History Format
+
+Each release documents:
+- **Added**: New features
+- **Changed**: Changes in existing functionality
+- **Deprecated**: Soon-to-be removed features
+- **Removed**: Removed features
+- **Fixed**: Bug fixes
+- **Security**: Security improvements
+
+---
+
+*For upgrade instructions, see [QUICKSTART.md](./QUICKSTART.md)*
+
+
+---
+
+
+# Presentation Slides Content
+
+
+# 📊 CryptoVault Enterprise - Presentation Content
+
+> Use this document to create your PowerPoint/Google Slides presentation
+
+---
+
+## 🎯 Slide 1: Title Slide
+
+### CryptoVault Enterprise
+**Military-Grade Cloud Security with 7 Layers of Encryption**
+
+- Quantum-Ready Secure File Storage
+- Zero-Knowledge Architecture
+- End-to-End Encryption
+
+*Your Name | Date*
+
+---
+
+## 🔍 Slide 2: Problem Statement
+
+### The Problem with Traditional Cloud Storage
+
+| Issue | Impact |
+|-------|--------|
+| **Server-Side Encryption** | Provider can read your files |
+| **Centralized Key Management** | Single point of failure |
+| **Vulnerable to Breach** | Data exposed if servers compromised |
+| **No Quantum Protection** | Future quantum computers can break RSA/ECC |
+| **Mutable Audit Logs** | Attackers can hide their tracks |
+
+**"When you upload to Dropbox/Google Drive, they can read your files."**
+
+---
+
+## ✨ Slide 3: Our Solution
+
+### CryptoVault: Zero-Knowledge Cloud Security
+
+- ✅ **Client-Side Encryption** - Files encrypted in YOUR browser
+- ✅ **You Control the Keys** - Server never sees plaintext or keys
+- ✅ **Post-Quantum Ready** - Protected against future quantum attacks
+- ✅ **Immutable Audit Trail** - Blockchain-style tamper-proof logs
+- ✅ **7 Layers of Security** - Defense in depth
+
+**"Even we can't read your files. Only you hold the keys."**
+
+---
+
+## 🏗️ Slide 4: System Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                     CryptoVault Architecture             │
+├─────────────────────────────────────────────────────────┤
+│                                                          │
+│   [Browser]        [Server]         [Cloud]             │
+│       │                │                │               │
+│   AES-256-GCM     Auth/API          AWS S3             │
+│   Encryption      Routing           Storage            │
+│       │                │                │               │
+│   RSA-4096        PostgreSQL        AWS KMS            │
+│   Key Wrap        Metadata          Key Wrap           │
+│                                                          │
+└─────────────────────────────────────────────────────────┘
+```
+
+**Key Point:** Encryption happens BEFORE data leaves the browser!
+
+---
+
+## 🔐 Slide 5: 7 Layers of Security
+
+```
+Layer 7: Blockchain Audit Trail (ECDSA signatures)
+Layer 6: Attribute-Based Access Control (CP-ABE)
+Layer 5: AWS KMS Key Wrapping
+Layer 4: Multi-Cloud Redundancy (AWS + GCP)
+Layer 3: HMAC-SHA512 Integrity Verification
+Layer 2: RSA-4096-OAEP Key Wrapping
+Layer 1: AES-256-GCM Data Encryption
+```
+
+**Each layer provides defense-in-depth protection!**
+
+---
+
+## 🔄 Slide 6: Encryption Flow (Upload)
+
+```
+User File (Plaintext)
+        │
+        ▼
+Generate AES-256 Key (DEK)
+        │
+        ▼
+Encrypt with AES-256-GCM ──► Ciphertext + AuthTag
+        │
+        ▼
+Wrap DEK with RSA-4096 ──► Encrypted DEK
+        │
+        ▼
+Generate HMAC ──► Integrity Signature
+        │
+        ▼
+Upload to AWS S3 (encrypted)
+```
+
+---
+
+## 🔄 Slide 7: Encryption Flow (Download)
+
+```
+Download from AWS S3
+        │
+        ▼
+Verify HMAC ──► ✓ Integrity Check
+        │
+        ▼
+Unwrap DEK with Private Key ──► Decrypted DEK
+        │
+        ▼
+Decrypt with AES-256-GCM ──► ✓ AuthTag Verified
+        │
+        ▼
+Original File (Plaintext)
+```
+
+---
+
+## 📦 Slide 8: Envelope Encryption Pattern
+
+### Why Envelope Encryption?
+
+**Problem:**
+- RSA-4096 can only encrypt ~470 bytes max
+- Files can be gigabytes in size
+
+**Solution: Envelope Encryption**
+1. Encrypt large files with AES-256 (symmetric, fast)
+2. Encrypt small AES key with RSA-4096 (asymmetric, secure)
+3. Store both encrypted file + wrapped key
+
+**Best of both worlds: Speed + Security**
+
+---
+
+## 🛠️ Slide 9: Cryptographic Modules Implemented
+
+### 20+ Crypto Algorithms
+
+| Category | Algorithms |
+|----------|------------|
+| **Symmetric** | AES-256-GCM, ChaCha20-Poly1305 |
+| **Asymmetric** | RSA-4096-OAEP, ElGamal |
+| **Signatures** | ECDSA P-384, EdDSA |
+| **Key Exchange** | Diffie-Hellman, ECDH |
+| **Hashing** | SHA-256, SHA-512, SHA-3 |
+| **Post-Quantum** | CRYSTALS-Kyber |
+| **ZKP** | Schnorr Protocol |
+| **Secret Sharing** | Shamir's (t,n) |
+| **ABE** | Ciphertext-Policy ABE |
+| **ORAM** | Path ORAM |
+| **PRE** | AFGH Scheme |
+
+---
+
+## 🌟 Slide 10: What Makes This Project Unique
+
+### Comparison with Regular Cloud Storage
+
+| Feature | Google Drive/Dropbox | CryptoVault |
+|---------|---------------------|-------------|
+| Encryption Location | Server-side | **Client-side** |
+| Who Holds Keys | Provider | **You** |
+| Can Provider Read Files | ✅ Yes | ❌ **No** |
+| Quantum Resistant | ❌ No | ✅ **Yes (Kyber)** |
+| Access Pattern Hidden | ❌ No | ✅ **Yes (ORAM)** |
+| Immutable Audit | ❌ No | ✅ **Yes (Hash Chain)** |
+
+**This is true Zero-Knowledge Architecture!**
+
+---
+
+## ⚛️ Slide 11: Post-Quantum Cryptography
+
+### Why Post-Quantum Matters
+
+**The Threat:**
+- Quantum computers can break RSA and ECC
+- "Harvest Now, Decrypt Later" attacks
+
+**Our Solution:**
+- **CRYSTALS-Kyber** (NIST standard for PQC)
+- Lattice-based cryptography
+- Resistant to Shor's algorithm
+- Hybrid encryption: Classical + Post-Quantum
+
+```
+File ──► AES-256 ──► RSA-4096 ──► Kyber-768
+              ↑              ↑           ↑
+          Classical    Classical   Post-Quantum
+```
+
+---
+
+## 🔏 Slide 12: Zero-Knowledge Proof (Schnorr)
+
+### Authentication Without Revealing Secrets
+
+**Traditional Auth:** "Here's my password"
+**ZKP Auth:** "I'll prove I know it, without telling you"
+
+```
+Prover (Alice)              Verifier (Bob)
+     │                           │
+     │──── Commitment ──────────►│
+     │◄─── Challenge ────────────│
+     │──── Response ────────────►│
+     │                 ✓ Verified │
+```
+
+**Alice proves knowledge without ever revealing the secret!**
+
+---
+
+## 🔀 Slide 13: Shamir's Secret Sharing
+
+### Distributed Key Recovery (3-of-5 Threshold)
+
+```
+        SECRET KEY
+             │
+    ┌────────┼────────┐
+    │        │        │
+   ─┼────────┼────────┼─
+    │        │        │
+┌───┴──┐ ┌───┴──┐ ┌───┴──┐ ┌──────┐ ┌──────┐
+│Share │ │Share │ │Share │ │Share │ │Share │
+│  1   │ │  2   │ │  3   │ │  4   │ │  5   │
+└──────┘ └──────┘ └──────┘ └──────┘ └──────┘
+   AWS     GCP     User    Backup   Backup
+   KMS     KMS    Device     #1       #2
+```
+
+**ANY 3 shares can reconstruct the secret!**
+
+---
+
+## 🔗 Slide 14: Blockchain-Style Audit Trail
+
+### Immutable, Tamper-Proof Logging
+
+```
+┌─────────┐    ┌─────────┐    ┌─────────┐
+│ Entry 1 │───▶│ Entry 2 │───▶│ Entry 3 │
+│ Hash: A │    │ Hash: B │    │ Hash: C │
+│ Prev: - │    │ Prev: A │    │ Prev: B │
+│ Sig: σ₁ │    │ Sig: σ₂ │    │ Sig: σ₃ │
+└─────────┘    └─────────┘    └─────────┘
+```
+
+**Each entry is:**
+- ECDSA signed for authenticity
+- Chained with hash of previous entry
+- Cannot be modified without detection
+
+---
+
+## 💻 Slide 15: Technology Stack
+
+### Modern, Production-Ready Stack
+
+**Frontend:**
+- Next.js 15 (App Router)
+- React 18 + TypeScript
+- Tailwind CSS + Framer Motion
+
+**Backend:**
+- Next.js API Routes
+- Prisma ORM + PostgreSQL
+- JWT Authentication
+
+**Cryptography:**
+- Web Crypto API (native browser)
+- Noble Curves (elliptic curves)
+
+**Cloud:**
+- AWS S3 (storage)
+- AWS KMS (key management)
+- GCP backup (redundancy)
+
+---
+
+## 📊 Slide 16: Database Design
+
+### Comprehensive Data Model
+
+**Core Tables:**
+- `users` - Account + cryptographic keys
+- `files` - Encrypted file metadata
+- `shared_files` - Proxy re-encryption shares
+- `audit_logs` - Blockchain-style logging
+- `mpc_key_shares` - Threshold key parts
+- `encryption_metrics` - Performance analytics
+
+**Key Features:**
+- Zero plaintext stored
+- All keys encrypted at rest
+- Multi-provider redundancy
+
+---
+
+## 🎮 Slide 17: Demo Features
+
+### Live Demonstration
+
+1. **File Upload** - Watch encryption in real-time
+2. **File Download** - See decryption process
+3. **Crypto Lab** - Interactive algorithm explorer
+4. **Analytics** - Encryption performance metrics
+5. **Audit Trail** - Immutable activity logs
+
+**Try the demo at: /demo**
+
+---
+
+## 🔮 Slide 18: Future Roadmap
+
+### Planned Enhancements
+
+**Near-term:**
+- [ ] Hardware Security Module (HSM) integration
+- [ ] Mobile applications (iOS/Android)
+- [ ] Browser extensions
+
+**Long-term:**
+- [ ] Decentralized storage (IPFS/Filecoin)
+- [ ] Smart contract audit trail (Ethereum)
+- [ ] Secure enclaves (Intel SGX)
+
+---
+
+## 📚 Slide 19: Key Takeaways
+
+### Summary
+
+1. **Zero-Knowledge** - We CAN'T read your files
+2. **7 Layers** - Defense in depth security
+3. **Quantum-Ready** - Future-proof with Kyber
+4. **20+ Algorithms** - Comprehensive crypto implementation
+5. **Production-Ready** - Real-world deployment capable
+
+**"The most secure cloud storage you can't find."**
+
+---
+
+## 🙏 Slide 20: Thank You
+
+### Questions?
+
+**Project Highlights:**
+- 20+ cryptographic algorithms
+- Zero-knowledge architecture
+- Post-quantum ready
+- Blockchain audit trail
+
+**Technologies Used:**
+- Next.js 15, TypeScript, PostgreSQL
+- AWS S3/KMS, Web Crypto API
+- Prisma, Tailwind CSS
+
+**Contact:**
+- [Your Email]
+- [GitHub Repository]
+
+---
+
+# 📋 Presentation Tips
+
+## Slide Design Recommendations
+
+1. **Use dark theme** - Security = dark colors
+2. **Accent color** - Electric blue or green
+3. **Animations** - Subtle, professional
+4. **Icons** - Use lock, shield, key icons liberally
+
+## Key Points to Emphasize
+
+1. **Novelty**: Client-side encryption (not server-side)
+2. **Zero-Knowledge**: Even we can't read files
+3. **Comprehensive**: 20+ crypto algorithms
+4. **Future-Proof**: Post-quantum ready
+5. **Production-Ready**: Real AWS/GCP integration
+
+## Questions to Prepare For
+
+1. "How is this different from existing encrypted storage?"
+   - Answer: Client-side encryption, zero-knowledge, we CAN'T read your data
+
+2. "What if user loses their keys?"
+   - Answer: Shamir's secret sharing for recovery
+
+3. "Why so many encryption layers?"
+   - Answer: Defense in depth, each layer protects against different threats
+
+4. "Is post-quantum really necessary now?"
+   - Answer: "Harvest now, decrypt later" attacks, NIST mandates
+
+5. "How does file sharing work without sharing keys?"
+   - Answer: Proxy re-encryption (AFGH scheme)
+
+---
+
+# 📊 Diagram Assets for Presentation
+
+## ASCII Diagrams to Convert to Graphics
+
+### 1. Envelope Encryption (Use as infographic)
+```
+┌─────────────────────────────────────┐
+│         ENVELOPE ENCRYPTION          │
+│                                      │
+│   ┌────────────┐                    │
+│   │  Plaintext │                    │
+│   │   (Large)  │                    │
+│   └─────┬──────┘                    │
+│         │                           │
+│    AES-256 ◄── DEK (32 bytes)      │
+│         │            │              │
+│         │       RSA-4096            │
+│         │            │              │
+│         ▼            ▼              │
+│   ┌────────────┐  ┌────────────┐   │
+│   │ Ciphertext │  │ Wrapped    │   │
+│   │  (Large)   │  │   DEK      │   │
+│   └────────────┘  └────────────┘   │
+└─────────────────────────────────────┘
+```
+
+### 2. Security Layers (Use as pyramid diagram)
+```
+                    △
+                  Audit
+                ────────
+              Access Control
+            ────────────────
+            Cloud KMS Wrap
+          ──────────────────
+          Multi-Cloud Storage
+        ────────────────────────
+          HMAC Integrity
+      ──────────────────────────
+         RSA Key Wrapping
+    ────────────────────────────────
+          AES-256 Encryption
+  ──────────────────────────────────────
+```
+
+### 3. Zero-Knowledge Architecture (Use as comparison diagram)
+```
+TRADITIONAL                     CRYPTOVAULT
+────────────                    ───────────
+
+User ──► Provider ──► Storage   User ──► Encrypted ──► Storage
+         (sees data)                     (blind)
+
+Provider CAN                    Provider CANNOT
+read your files                 read your files
+```
+
+### 4. Tech Stack Icons (Use as icon grid)
+```
+┌────────────────────────────────────────────────────┐
+│                   TECHNOLOGY STACK                  │
+├────────────────────────────────────────────────────┤
+│                                                     │
+│  [Next.js]  [React]  [TypeScript]  [Tailwind]     │
+│                                                     │
+│  [PostgreSQL]  [Prisma]  [AWS S3]  [AWS KMS]      │
+│                                                     │
+│  [Web Crypto]  [Noble Curves]  [JWT]               │
+│                                                     │
+└────────────────────────────────────────────────────┘
+```
+
+
+---
+
+
+# License
+
+
+MIT License
+
+Copyright (c) 2026 CryptoVault Enterprise
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+## Third-Party Licenses
+
+This project uses the following open-source libraries:
+
+### @noble/curves
+MIT License - Copyright (c) 2022 Paul Miller (https://paulmillr.com)
+
+### @noble/hashes
+MIT License - Copyright (c) 2022 Paul Miller (https://paulmillr.com)
+
+### Next.js
+MIT License - Copyright (c) 2024 Vercel, Inc.
+
+### Prisma
+Apache License 2.0 - Copyright (c) 2019 Prisma Labs, Inc.
+
+### React
+MIT License - Copyright (c) Meta Platforms, Inc. and affiliates.
+
+### Tailwind CSS
+MIT License - Copyright (c) Tailwind Labs, Inc.
+
+### Radix UI
+MIT License - Copyright (c) 2022 WorkOS
+
+### Framer Motion
+MIT License - Copyright (c) 2018 Framer B.V.
+
+---
+
+## Cryptographic Notice
+
+This software includes cryptographic functionality. The export, re-export, and 
+use of cryptographic software may be regulated in your jurisdiction. Please 
+ensure compliance with all applicable laws and regulations before deploying
+this software.
+
+The cryptographic implementations in this software are based on widely-reviewed
+standards and use established libraries. However, no guarantee is made regarding
+the security of any specific implementation or its suitability for protecting
+classified or highly sensitive information.
