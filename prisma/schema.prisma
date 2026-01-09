@@ -1,0 +1,302 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// USER MANAGEMENT
+// ============================================================================
+
+model User {
+  id                  String    @id @default(cuid())
+  email               String    @unique
+  passwordHash        String
+  
+  // Cryptographic keys
+  publicKey           String?   @db.Text // RSA-4096 public key (PEM format)
+  privateKeyEncrypted String?   @db.Text // Encrypted private key (AES-encrypted with password)
+  ecdsaPublicKey      String?   @db.Text // ECDSA P-384 public key for signatures
+  zkpPublicKey        String?             // Zero-knowledge proof public commitment
+  mpcKeyShares        Json?               // Threshold key shares (encrypted)
+  
+  // Account metadata
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  lastLogin           DateTime?
+  emailVerified       Boolean   @default(false)
+  twoFactorEnabled    Boolean   @default(false)
+  
+  // Relationships
+  files               File[]
+  auditLogs           AuditLog[]
+  sharedFiles         SharedFile[] @relation("SharedByUser")
+  receivedShares      SharedFile[] @relation("SharedWithUser")
+  attributes          UserAttribute[]
+
+  @@index([email])
+  @@map("users")
+}
+
+model UserAttribute {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // ABE attributes
+  key       String    // e.g., "role", "department", "clearance_level"
+  value     String    // e.g., "faculty", "CSE", "5"
+  expiresAt DateTime?
+  
+  createdAt DateTime @default(now())
+
+  @@unique([userId, key])
+  @@index([userId])
+  @@map("user_attributes")
+}
+
+// ============================================================================
+// FILE STORAGE
+// ============================================================================
+
+model File {
+  id                  String    @id @default(cuid())
+  userId              String
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // File metadata
+  originalFilename    String
+  encryptedFilename   String    @unique
+  mimeType            String
+  fileSize            BigInt    // Original file size in bytes
+  encryptedFileSize   BigInt    // Encrypted file size in bytes
+  
+  // Primary storage
+  storageProvider     String    // "AWS_S3" | "GCP_STORAGE" | "LOCAL"
+  storageKey          String    @unique
+  storageUrl          String?
+  
+  // Backup storage (for multi-cloud redundancy)
+  backupStorageProvider String?
+  backupStorageKey    String?
+  
+  // Encryption details
+  encryptedDEK        String    @db.Text // DEK encrypted with user's RSA public key
+  encryptedDEKWithKMS String?   @db.Text // DEK additionally encrypted with AWS/GCP KMS
+  hmacSignature       String              // HMAC-SHA512 for integrity verification
+  merkleRoot          String?             // Merkle tree root for chunk verification
+  
+  encryptionAlgorithm String    @default("AES-256-GCM")
+  keyWrapAlgorithm    String    @default("RSA-OAEP-4096")
+  iv                  String              // Initialization vector (hex)
+  authTag             String              // GCM authentication tag
+  
+  // Advanced encryption features
+  abePolicy           String?   @db.Text  // Attribute-based encryption policy
+  fheIndexed          Boolean   @default(false)
+  oramPosition        Int?                // ORAM tree position
+  
+  // Timestamps
+  uploadedAt          DateTime  @default(now())
+  lastAccessedAt      DateTime  @default(now())
+  deletedAt           DateTime?           // Soft delete timestamp
+  
+  // Relationships
+  sharedWith          SharedFile[]
+  auditLogs           AuditLog[]
+  metadata            FileMetadata?
+
+  @@index([userId])
+  @@index([encryptedFilename])
+  @@index([uploadedAt])
+  @@map("files")
+}
+
+model FileMetadata {
+  id                String   @id @default(cuid())
+  fileId            String   @unique
+  file              File     @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  
+  // Searchable encryption
+  encryptedMetadata String?  @db.Text // JSON metadata encrypted for searchable encryption
+  fheIndex          String?  @db.Text // FHE search index
+  tags              String[]           // Searchable tags
+  
+  // Preview data
+  thumbnailUrl      String?
+  previewUrl        String?
+  
+  createdAt         DateTime @default(now())
+
+  @@map("file_metadata")
+}
+
+// ============================================================================
+// FILE SHARING
+// ============================================================================
+
+model SharedFile {
+  id                String    @id @default(cuid())
+  fileId            String
+  file              File      @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  
+  // Who shared (owner)
+  sharedByUserId    String
+  sharedByUser      User      @relation("SharedByUser", fields: [sharedByUserId], references: [id], onDelete: Cascade)
+  
+  // Who received (recipient)
+  sharedWithUserId  String
+  sharedWithUser    User      @relation("SharedWithUser", fields: [sharedWithUserId], references: [id], onDelete: Cascade)
+  
+  // Proxy re-encryption data
+  reEncryptionKey   String    @db.Text // Transformation key for proxy re-encryption
+  accessPolicy      String?   @db.Text // Access constraints (JSON)
+  
+  // Permissions
+  canDownload       Boolean   @default(true)
+  canReshare        Boolean   @default(false)
+  expiresAt         DateTime?
+  
+  // Timestamps
+  sharedAt          DateTime  @default(now())
+  lastAccessedAt    DateTime?
+  revokedAt         DateTime?
+
+  @@unique([fileId, sharedWithUserId])
+  @@index([fileId])
+  @@index([sharedWithUserId])
+  @@index([sharedByUserId])
+  @@map("shared_files")
+}
+
+// ============================================================================
+// AUDIT & LOGGING
+// ============================================================================
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  fileId      String?
+  file        File?    @relation(fields: [fileId], references: [id], onDelete: SetNull)
+  
+  // Action details
+  action      String   // "UPLOAD", "DOWNLOAD", "SHARE", "DELETE", "LOGIN", etc.
+  ipAddress   String?
+  userAgent   String?
+  
+  details     Json?    // Additional context (encrypted if sensitive)
+  
+  // Cryptographic verification (blockchain-style)
+  signature   String   // ECDSA signature of log entry
+  previousHash String? // Hash of previous log (hash chain)
+  merkleProof String?  // Merkle proof for batch verification
+  
+  timestamp   DateTime @default(now())
+
+  @@index([userId])
+  @@index([fileId])
+  @@index([action])
+  @@index([timestamp])
+  @@map("audit_logs")
+}
+
+// ============================================================================
+// MULTI-PARTY COMPUTATION
+// ============================================================================
+
+model MPCKeyShare {
+  id             String   @id @default(cuid())
+  shareIndex     Int      // 1, 2, 3, etc. (Shamir threshold index)
+  provider       String   // "AWS", "GCP", "LOCAL", "USER_DEVICE", "BACKUP"
+  
+  encryptedShare String   @db.Text // Threshold signature key share (encrypted)
+  commitment     String   // Feldman VSS commitment for verification
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  isActive       Boolean  @default(true)
+
+  @@unique([shareIndex, provider])
+  @@map("mpc_key_shares")
+}
+
+model MPCSession {
+  id            String   @id @default(cuid())
+  sessionToken  String   @unique
+  
+  operation     String   // "DELETE_FILE", "CHANGE_PASSWORD", "REVOKE_ACCESS", etc.
+  userId        String
+  targetId      String?  // File ID, User ID, etc.
+  
+  threshold     Int      @default(3)  // Required signatures
+  totalShares   Int      @default(5)  // Total key shares
+  
+  participants  Json     // Array of participant statuses
+  signatures    Json?    // Collected partial signatures
+  
+  status        String   @default("PENDING") // PENDING, COMPLETED, FAILED, EXPIRED
+  result        String?  // Final combined signature
+  
+  createdAt     DateTime @default(now())
+  expiresAt     DateTime
+  completedAt   DateTime?
+
+  @@index([sessionToken])
+  @@index([userId])
+  @@index([status])
+  @@map("mpc_sessions")
+}
+
+// ============================================================================
+// METRICS & ANALYTICS
+// ============================================================================
+
+model EncryptionMetric {
+  id             String   @id @default(cuid())
+  
+  operation      String   // "AES_ENCRYPT", "RSA_ENCRYPT", "FHE_COMPUTE", "UPLOAD", "DOWNLOAD"
+  durationMs     Int
+  fileSizeBytes  BigInt?
+  throughputMBps Float?
+  
+  algorithm      String
+  keySize        Int?
+  
+  errorOccurred  Boolean  @default(false)
+  errorMessage   String?
+  
+  timestamp      DateTime @default(now())
+
+  @@index([operation])
+  @@index([timestamp])
+  @@map("encryption_metrics")
+}
+
+model SecurityEvent {
+  id          String   @id @default(cuid())
+  
+  eventType   String   // "FAILED_LOGIN", "SUSPICIOUS_DOWNLOAD", "ANOMALY", etc.
+  severity    String   // "LOW", "MEDIUM", "HIGH", "CRITICAL"
+  
+  userId      String?
+  ipAddress   String?
+  userAgent   String?
+  
+  description String
+  details     Json?
+  
+  resolved    Boolean  @default(false)
+  resolvedAt  DateTime?
+  
+  timestamp   DateTime @default(now())
+
+  @@index([eventType])
+  @@index([severity])
+  @@index([timestamp])
+  @@map("security_events")
+}
