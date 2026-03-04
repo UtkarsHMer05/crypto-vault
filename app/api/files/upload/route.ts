@@ -94,20 +94,21 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Optionally encrypt DEK with KMS
+        // Encrypt DEK with KMS
         let encryptedDEKWithKMS = crypto.encryptedDEK;
-        try {
-            if (process.env.AWS_KMS_KEY_ARN && !process.env.AWS_KMS_KEY_ARN.includes('YOUR')) {
-                const kmsResponse = await kmsClient.send(new EncryptCommand({
-                    KeyId: process.env.AWS_KMS_KEY_ARN,
-                    Plaintext: Buffer.from(crypto.encryptedDEK, 'base64'),
-                }));
-                if (kmsResponse.CiphertextBlob) {
-                    encryptedDEKWithKMS = Buffer.from(kmsResponse.CiphertextBlob).toString('base64');
-                }
+        if (process.env.AWS_KMS_KEY_ARN && !process.env.AWS_KMS_KEY_ARN.includes('YOUR')) {
+            const kmsResponse = await kmsClient.send(new EncryptCommand({
+                KeyId: process.env.AWS_KMS_KEY_ARN,
+                Plaintext: Buffer.from(crypto.encryptedDEK, 'base64'),
+            }));
+
+            if (!kmsResponse.CiphertextBlob) {
+                throw new Error('KMS encryption returned an empty CiphertextBlob.');
             }
-        } catch (kmsError) {
-            console.warn('[KMS] Encryption failed, using original DEK:', kmsError);
+
+            encryptedDEKWithKMS = Buffer.from(kmsResponse.CiphertextBlob).toString('base64');
+        } else {
+            throw new Error('AWS_KMS_KEY_ARN is missing or unconfigured. KMS encryption is strictly enforced.');
         }
 
         // Debug: Log what DEK we're storing

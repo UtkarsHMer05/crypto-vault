@@ -384,10 +384,13 @@ export default function VisualEncryptionDemo() {
                         addLog(`  📦 Parsing encrypted data into chunks...`);
                         await sleep(300);
                     } else {
-                        addLog('  ⚠️ Cloud download failed, using cached encrypted data');
+                        const errorData = await downloadResponse.json();
+                        addLog(`  ⚠️ Cloud download failed: ${errorData.details || errorData.error || 'Unknown error'}`);
+                        throw new Error(`S3/KMS Download failed: ${errorData.details || errorData.error || 'Unknown error'}`);
                     }
-                } catch (e) {
-                    addLog('  ⚠️ Cloud unavailable, using cached encrypted data for demo');
+                } catch (e: any) {
+                    addLog(`  ⚠️ Cloud unavailable: ${e.message}`);
+                    throw e; // Fail hard instead of using cached data for demo
                 }
                 await sleep(300);
             } else {
@@ -601,7 +604,7 @@ export default function VisualEncryptionDemo() {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.error || 'Upload failed');
+                throw new Error(errorData.details || errorData.error || 'Upload failed');
             }
 
             const result = await response.json();

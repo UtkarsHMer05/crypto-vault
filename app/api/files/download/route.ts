@@ -92,16 +92,15 @@ export async function GET(request: NextRequest) {
         // Decrypt DEK with KMS if needed
         let finalEncryptedDEK = file.encryptedDEK;
         if (file.encryptedDEKWithKMS && file.encryptedDEKWithKMS !== file.encryptedDEK) {
-            try {
-                const kmsResponse = await kmsClient.send(new DecryptCommand({
-                    CiphertextBlob: Buffer.from(file.encryptedDEKWithKMS, 'base64'),
-                }));
-                if (kmsResponse.Plaintext) {
-                    finalEncryptedDEK = Buffer.from(kmsResponse.Plaintext).toString('base64');
-                }
-            } catch (kmsError) {
-                console.warn('[KMS] Decryption failed, using original DEK:', kmsError);
+            const kmsResponse = await kmsClient.send(new DecryptCommand({
+                CiphertextBlob: Buffer.from(file.encryptedDEKWithKMS, 'base64'),
+            }));
+
+            if (!kmsResponse.Plaintext) {
+                throw new Error('KMS decryption returned an empty Plaintext.');
             }
+
+            finalEncryptedDEK = Buffer.from(kmsResponse.Plaintext).toString('base64');
         }
 
         // Update last accessed

@@ -23,6 +23,7 @@ import {
     Loader2,
     MoreVertical,
     RefreshCw,
+    FileJson,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -172,6 +173,38 @@ export default function FilesPage() {
 
         } catch (err: any) {
             console.error('Download error:', err);
+            alert(`Download failed: ${err.message}`);
+        } finally {
+            setDownloading(null);
+        }
+    };
+
+    const handleDownloadEncrypted = async (file: FileItem) => {
+        try {
+            setDownloading(file.id);
+
+            // Fetch the encrypted payload and key metadata exactly as stored in S3/DB
+            const response = await fetch(`/api/files/download?fileId=${file.id}`);
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Download failed');
+            }
+
+            // Create a JSON package of the encrypted file + metadata
+            const encryptedPackage = JSON.stringify(data, null, 2);
+            const blob = new Blob([encryptedPackage], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${data.metadata.filename}.encrypted.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+        } catch (err: any) {
+            console.error('Download encrypted error:', err);
             alert(`Download failed: ${err.message}`);
         } finally {
             setDownloading(null);
@@ -371,6 +404,22 @@ export default function FilesPage() {
                                     <Button
                                         variant="outline"
                                         size="sm"
+                                        onClick={() => handleDownloadEncrypted(file)}
+                                        disabled={downloading === file.id}
+                                        className="gap-2"
+                                        title="Download Raw Encrypted File"
+                                    >
+                                        {downloading === file.id ? (
+                                            <Loader2 className="h-4 w-4 animate-spin" />
+                                        ) : (
+                                            <FileJson className="h-4 w-4" />
+                                        )}
+                                        <span className="hidden sm:inline">Encrypted</span>
+                                    </Button>
+
+                                    <Button
+                                        variant="default"
+                                        size="sm"
                                         onClick={() => handleDownload(file)}
                                         disabled={downloading === file.id}
                                         className="gap-2"
@@ -380,7 +429,7 @@ export default function FilesPage() {
                                         ) : (
                                             <Download className="h-4 w-4" />
                                         )}
-                                        Download
+                                        <span className="hidden sm:inline">Decrypt</span>
                                     </Button>
 
                                     <Button

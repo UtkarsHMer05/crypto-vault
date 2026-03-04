@@ -184,6 +184,14 @@ export default function UploadPage() {
                 detail: `${dekRaw.length} → ${wrappedDek.length} bytes (RSA encrypted)`
             });
             addLog(`✅ DEK wrapped: ${wrappedDek.length} bytes`);
+
+            // Save RSA Private Key to localStorage for decryption later
+            const privateKeyExport = await crypto.subtle.exportKey('pkcs8', rsaKeyPair.privateKey);
+            const privateKeyBase64 = btoa(String.fromCharCode(...new Uint8Array(privateKeyExport)));
+            const privateKeyPem = `-----BEGIN PRIVATE KEY-----\n${privateKeyBase64.match(/.{1,64}/g)?.join('\n')}\n-----END PRIVATE KEY-----`;
+            localStorage.setItem('privateKey', privateKeyPem);
+            addLog(`💾 Saved RSA Private Key to browser storage for Decryption`);
+
             await sleep(300);
 
             // Step 5: HMAC

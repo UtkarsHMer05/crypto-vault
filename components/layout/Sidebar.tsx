@@ -14,6 +14,7 @@ import {
     Database,
     Key,
     Eye,
+    Unlock,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -24,6 +25,7 @@ const navigation = [
     { name: 'Crypto Lab', href: '/crypto-lab', icon: Key },
     { name: 'Visual Demo', href: '/visual-demo', icon: Eye },
     { name: 'Upload Files', href: '/upload', icon: Upload },
+    { name: 'Decrypt File', href: '/decrypt', icon: Unlock },
     { name: 'My Files', href: '/files', icon: Files },
     { name: 'Shared Files', href: '/share', icon: Share2 },
     { name: 'Analytics', href: '/analytics', icon: BarChart3 },
